@@ -22,7 +22,6 @@ public class Utils {
     }
 
     public static void show_error(String msg) {
-        //System.out.printf("Utils.show_error -> %s\n",msg);
         Alert alert = new Alert(AlertType.ERROR);
         alert.setHeaderText("Error!");
         WebView webView = new WebView();

@@ -62,7 +62,6 @@ public class MidiRaw extends VBox {
 				"   Time delta", "Ch #", "Data1", "Data2", "Data3", "Note", "MIDI Message Name"));
 		getChildren().addAll(vBoxHeader, webView);
 		prevTime = System.nanoTime();
-		//setStyle("-fx-background-color: lightgreen");
 		textHeader.setFont(new Font(14.0));
 		vBoxHeader.setMinHeight(16);
 		vBoxHeader.setMaxHeight(16);
@@ -78,8 +77,6 @@ public class MidiRaw extends VBox {
 		textHeader.setFont(new Font(14.0));
 		webView.setMinHeight(h - 5);
 		webView.setMaxHeight(h - 5);
-		//vBoxRoot.setMinSize(w, h);
-		//vBoxRoot.setMaxSize(w, h);
 	}
 
 	public void addRawMidi (byte [] buffer) {
@@ -99,11 +96,9 @@ public class MidiRaw extends VBox {
 
 		switch (buffer.length) {
 		case 1:
-			//shortMessage.setMessage(buf[0]);
 			break;
 		case 2:
-			//shortMessage.setMessage(buf[0], buf[1],0);
-			switch (buffer[0]&0xf0) {			
+			switch (buffer[0]&0xf0) {
 			case 0xc0:
 				fontColor = Constants.MIDI_PC_COLOR;
 				name = "Program Change";
@@ -122,7 +117,6 @@ public class MidiRaw extends VBox {
 			d3 = String.format("      ");
 			break;
 		default:
-			//shortMessage.setMessage(buf[0], buf[1],buf[2]);
 			switch (buffer[0]&0xf0) {
 			case 0x80:
 				fontColor = Constants.MIDI_NOTE_OFF_COLOR;
@@ -166,7 +160,6 @@ public class MidiRaw extends VBox {
 			d1 = String.format("0x%02x", buffer[0]&0xff);
 			d2 = String.format("0x%02x", buffer[1]&0xff);
 			d3 = String.format("0x%02x", buffer[2]&0xff);
-			//note = "     ?";
 			break;
 		}
 		

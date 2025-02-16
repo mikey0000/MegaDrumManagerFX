@@ -49,7 +49,6 @@ public class SpinnerFast<T> extends Spinner<T> {
             @Override
             public void handle(long now) {
                 if (now - startTimestamp >= DELAY) {
-                    // trigger updates every frame once the initial delay is over
                     if (increment) {
                         spinner.increment();
                     } else {
@@ -66,7 +65,6 @@ public class SpinnerFast<T> extends Spinner<T> {
                 Node node = event.getPickResult().getIntersectedNode();
 
                 Boolean increment = null;
-                // find which kind of button was pressed and if one was pressed
                 while (increment == null && node != source) {
                     if (node.getStyleClass().contains("increment-arrow-button")) {
                         increment = Boolean.TRUE;
@@ -81,19 +79,10 @@ public class SpinnerFast<T> extends Spinner<T> {
                     source.requestFocus();
                     spinner = source;
                     this.increment = increment;
-
-                    // timestamp to calculate the delay
                     startTimestamp = System.nanoTime();
-
                     button = node;
-
-                    // update for css styling
                     node.pseudoClassStateChanged(PseudoClass.getPseudoClass("pressed"), true);
-
-                    // first value update
                     timer.handle(startTimestamp + DELAY);
-
-                    // trigger timer for more updates later
                     timer.start();
                 }
             }
@@ -106,6 +95,5 @@ public class SpinnerFast<T> extends Spinner<T> {
             	spinner = null;
             }
         }
-
     }
 }

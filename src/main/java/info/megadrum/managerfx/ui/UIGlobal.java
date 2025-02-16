@@ -29,7 +29,6 @@ public class UIGlobal {
 	
 	public UIGlobal () {
 		hBoxPane = new HBox(2);
-		//hBoxPane.setMinHeight(100);
 		hBoxPane.setAlignment(Pos.CENTER_LEFT);
 		hBoxPane.setStyle("-fx-border-color: lightgrey");
 		buttonGetAll = new Button("GetAll");
@@ -49,7 +48,6 @@ public class UIGlobal {
 		setFileLoadStatus(false);
 		labelFileStatus.setMinWidth(30);
 		labelFileStatus.setAlignment(Pos.CENTER);
-		//labelFileStatus.setAlignment(Pos.BOTTOM_CENTER);
 		buttonPrevFile = new Button("prevCfg");
 		buttonPrevFile.setMinWidth(55);
 		buttonNextFile = new Button("nextCfg");
@@ -57,7 +55,6 @@ public class UIGlobal {
 		labelMidiStatus = new Label("");
 		labelMidiStatus.setMinWidth(100);
 		labelMidiStatus.setAlignment(Pos.CENTER);
-		//labelMidiStatus.setAlignment(Pos.CENTER);
 		progressBarSysex = new ProgressBar();
 		progressBarSysex.setMinWidth(200);
 		progressBarSysex.setMaxWidth(200);

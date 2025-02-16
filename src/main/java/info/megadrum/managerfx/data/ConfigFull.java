@@ -8,19 +8,16 @@ import org.apache.commons.configuration2.ex.ConversionException;
 
 public class ConfigFull implements java.io.Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 4402239785688415814L;
     public ConfigGlobalMisc configGlobalMisc;
     public ConfigMisc configMisc;
     public ConfigPedal configPedal;
-    public ConfigPad [] configPads;
-    public ConfigPositional [] configPos;
-    public Config3rd [] config3rds;
-    public ConfigCurve [] configCurves;
-    public ConfigCustomName [] configCustomNames;
-    public ConfigConfigName [] configConfigNames;
+    public ConfigPad[] configPads;
+    public ConfigPositional[] configPos;
+    public Config3rd[] config3rds;
+    public ConfigCurve[] configCurves;
+    public ConfigCustomName[] configCustomNames;
+    public ConfigConfigName[] configConfigNames;
     public int customNamesCount = 2;
     public int configNamesCount;
     public int configCurrent;
@@ -44,55 +41,54 @@ public class ConfigFull implements java.io.Serializable {
         configPedal = new ConfigPedal();
         configPads = new ConfigPad[Constants.PADS_COUNT];
         configPos = new ConfigPositional[Constants.PADS_COUNT];
-        config3rds = new Config3rd[(Constants.PADS_COUNT-1)/2];
-        for (Integer i = 0; i < Constants.PADS_COUNT;i++) {
+        config3rds = new Config3rd[(Constants.PADS_COUNT - 1) / 2];
+        for (int i = 0; i < Constants.PADS_COUNT; i++) {
             configPads[i] = new ConfigPad(i);
             if (i == 0) {
                 configPads[i].setLeftRight(true);
             } else {
-                configPads[i].setLeftRight((i&1) > 0);
+                configPads[i].setLeftRight((i & 1) > 0);
             }
             configPos[i] = new ConfigPositional(i);
-            if ((i>0) && ((i&0x01)==0)) {
-                config3rds[(i-1)/2] = new Config3rd((i-1)/2);
+            if ((i > 0) && ((i & 0x01) == 0)) {
+                config3rds[(i - 1) / 2] = new Config3rd((i - 1) / 2);
             }
         }
         configCurves = new ConfigCurve[Constants.CURVES_COUNT];
-        for (Integer i = 0; i < Constants.CURVES_COUNT;i++) {
+        for (int i = 0; i < Constants.CURVES_COUNT; i++) {
             configCurves[i] = new ConfigCurve(i);
         }
         configCustomNames = new ConfigCustomName[Constants.CUSTOM_NAMES_MAX];
-        for (Integer i = 0; i < Constants.CUSTOM_NAMES_MAX;i++) {
+        for (int i = 0; i < Constants.CUSTOM_NAMES_MAX; i++) {
             configCustomNames[i] = new ConfigCustomName(i);
-            configCustomNames[i].name = "Custom" + i.toString();
+            configCustomNames[i].name = "Custom" + i;
         }
         configConfigNames = new ConfigConfigName[Constants.CONFIG_NAMES_MAX];
-        for (Integer i = 0; i < Constants.CONFIG_NAMES_MAX;i++) {
+        for (int i = 0; i < Constants.CONFIG_NAMES_MAX; i++) {
             configConfigNames[i] = new ConfigConfigName(i);
-            //configConfigNames[i].name = "Custom" + i.toString();
             configConfigNames[i].name = "            ";
         }
         configNamesCount = Constants.CONFIG_NAMES_MAX;
     }
 
     public void copyToPropertiesConfiguration(PropertiesConfiguration prop, PropertiesConfigurationLayout layout) {
-        configGlobalMisc.copyToPropertiesConfiguration(prop, layout,configGlobalMiscPrefix);
-        configMisc.copyToPropertiesConfiguration(prop, layout,configMiscPrefix);
-        configPedal.copyToPropertiesConfiguration(prop, layout,configPedalPrefix);
-        for (Integer i = 0; i < Constants.PADS_COUNT;i++) {
-            configPads[i].copyToPropertiesConfiguration(prop, layout,configPadPrefix, i);
-            configPos[i].copyToPropertiesConfiguration(prop, layout,configPosPrefix, i);
-            if ((i>0) && ((i&0x01)==0)) {
-                config3rds[(i-1)/2].copyToPropertiesConfiguration(prop, layout,config3rdPrefix, (i-1)/2);
+        configGlobalMisc.copyToPropertiesConfiguration(prop, layout, configGlobalMiscPrefix);
+        configMisc.copyToPropertiesConfiguration(prop, layout, configMiscPrefix);
+        configPedal.copyToPropertiesConfiguration(prop, layout, configPedalPrefix);
+        for (int i = 0; i < Constants.PADS_COUNT; i++) {
+            configPads[i].copyToPropertiesConfiguration(prop, layout, configPadPrefix, i);
+            configPos[i].copyToPropertiesConfiguration(prop, layout, configPosPrefix, i);
+            if ((i > 0) && ((i & 0x01) == 0)) {
+                config3rds[(i - 1) / 2].copyToPropertiesConfiguration(prop, layout, config3rdPrefix, (i - 1) / 2);
             }
         }
-        for (Integer i = 0; i < Constants.CURVES_COUNT;i++) {
-            configCurves[i].copyToPropertiesConfiguration(prop, layout,configCurvePrefix, i);
+        for (int i = 0; i < Constants.CURVES_COUNT; i++) {
+            configCurves[i].copyToPropertiesConfiguration(prop, layout, configCurvePrefix, i);
         }
-        layout.setComment(configCustomNamePrefix+"Count", "\n#Custom Pads Names");
-        prop.setProperty(configCustomNamePrefix+"Count", customNamesCount);
-        for (Integer i = 0; i < Constants.CUSTOM_NAMES_MAX;i++) {
-            configCustomNames[i].copyToPropertiesConfiguration(prop, layout,configCustomNamePrefix, i);
+        layout.setComment(configCustomNamePrefix + "Count", "\n#Custom Pads Names");
+        prop.setProperty(configCustomNamePrefix + "Count", customNamesCount);
+        for (int i = 0; i < Constants.CUSTOM_NAMES_MAX; i++) {
+            configCustomNames[i].copyToPropertiesConfiguration(prop, layout, configCustomNamePrefix, i);
         }
     }
 
@@ -100,18 +96,18 @@ public class ConfigFull implements java.io.Serializable {
         configGlobalMisc.copyFromPropertiesConfiguration(prop, configGlobalMiscPrefix);
         configMisc.copyFromPropertiesConfiguration(prop, configMiscPrefix);
         configPedal.copyFromPropertiesConfiguration(prop, configPedalPrefix);
-        for (Integer i = 0; i < Constants.PADS_COUNT;i++) {
+        for (int i = 0; i < Constants.PADS_COUNT; i++) {
             configPads[i].copyFromPropertiesConfiguration(prop, configPadPrefix, i);
             configPos[i].copyFromPropertiesConfiguration(prop, configPosPrefix, i);
-            if ((i>0) && ((i&0x01)==0)) {
-                config3rds[(i-1)/2].copyFromPropertiesConfiguration(prop, config3rdPrefix, (i-1)/2);
+            if ((i > 0) && ((i & 0x01) == 0)) {
+                config3rds[(i - 1) / 2].copyFromPropertiesConfiguration(prop, config3rdPrefix, (i - 1) / 2);
             }
         }
-        for (Integer i = 0; i < Constants.CURVES_COUNT;i++) {
+        for (int i = 0; i < Constants.CURVES_COUNT; i++) {
             configCurves[i].copyFromPropertiesConfiguration(prop, configCurvePrefix, i);
         }
-        customNamesCount = Utils.validateInt(prop.getInt(configCustomNamePrefix+"Count", customNamesCount),2,32,customNamesCount);
-        for (Integer i = 0; i < Constants.CUSTOM_NAMES_MAX;i++) {
+        customNamesCount = Utils.validateInt(prop.getInt(configCustomNamePrefix + "Count", customNamesCount), 2, 32, customNamesCount);
+        for (int i = 0; i < Constants.CUSTOM_NAMES_MAX; i++) {
             configCustomNames[i].copyFromPropertiesConfiguration(prop, configCustomNamePrefix, i);
         }
     }
@@ -120,16 +116,16 @@ public class ConfigFull implements java.io.Serializable {
         configMisc.syncState = Constants.SYNC_STATE_UNKNOWN;
         configPedal.syncState = Constants.SYNC_STATE_UNKNOWN;
         configGlobalMisc.syncState = Constants.SYNC_STATE_UNKNOWN;
-        for (Integer i = 0; i < Constants.PADS_COUNT;i++) {
+        for (int i = 0; i < Constants.PADS_COUNT; i++) {
             configPads[i].syncState = Constants.SYNC_STATE_UNKNOWN;
-            if ((i>0) && ((i&0x01)==0)) {
-                config3rds[(i-1)/2].syncState = Constants.SYNC_STATE_UNKNOWN;
+            if ((i > 0) && ((i & 0x01) == 0)) {
+                config3rds[(i - 1) / 2].syncState = Constants.SYNC_STATE_UNKNOWN;
             }
         }
-        for (Integer i = 0; i < Constants.CURVES_COUNT;i++) {
+        for (int i = 0; i < Constants.CURVES_COUNT; i++) {
             configCurves[i].syncState = Constants.SYNC_STATE_UNKNOWN;
         }
-        for (Integer i = 0; i < Constants.CUSTOM_NAMES_MAX;i++) {
+        for (int i = 0; i < Constants.CUSTOM_NAMES_MAX; i++) {
             configCustomNames[i].syncState = Constants.SYNC_STATE_UNKNOWN;
         }
     }

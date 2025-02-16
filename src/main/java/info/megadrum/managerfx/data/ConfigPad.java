@@ -43,10 +43,10 @@ public class ConfigPad {
         id = i;
     }
 
-    public void copyToPropertiesConfiguration(PropertiesConfiguration prop, PropertiesConfigurationLayout layout, String prefix, Integer id) {
+    public void copyToPropertiesConfiguration(PropertiesConfiguration prop, PropertiesConfigurationLayout layout, String prefix, int id) {
         id++;
-        prefix = prefix+"["+id.toString()+"].";
-        layout.setComment(prefix+"note", "\n#Input "+id.toString()+" settings");
+        prefix = prefix+"["+id+"].";
+        layout.setComment(prefix+"note", "\n#Input "+id+" settings");
         prop.setProperty(prefix+"disabled", disabled);
         prop.setProperty(prefix+"note", note);
         prop.setProperty(prefix+"channel", channel);
@@ -76,9 +76,9 @@ public class ConfigPad {
         prop.setProperty(prefix+"pressrollNote_linked", pressrollNote_linked);
     }
 
-    public void copyFromPropertiesConfiguration(PropertiesConfiguration prop, String prefix, Integer id) {
+    public void copyFromPropertiesConfiguration(PropertiesConfiguration prop, String prefix, int id) {
         id++;
-        prefix = prefix+"["+id.toString()+"].";
+        prefix = prefix+"["+id+"].";
         disabled = prop.getBoolean(prefix+"disabled", disabled);
         note = Utils.validateInt(prop.getInt(prefix+"note", note),0,127,note);
         channel = Utils.validateInt(prop.getInt(prefix+"channel", channel),0,15,channel);

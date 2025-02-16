@@ -146,7 +146,6 @@ public class Controller implements MidiRescanEventListener {
             closeProgram();
         });
         imageWindowIcon = new Image("/icon_256x256.png");
-//        imageWindowIcon = new Image(getClass().getResource("/icon_256x256.png").toExternalForm());
 
 
         fileManager = new FileManager(window);
@@ -255,11 +254,9 @@ public class Controller implements MidiRescanEventListener {
                 if (padPair > 0) {
                     inputNumber = ((padPair - 1)*2) +1;
                 }
-                //System.out.printf("Input %s control change\n", (parameter == Constants.CONTROL_CHANGE_EVENT_LEFT_INPUT) ? "left" : "right");
                 switch (parameter) {
                     case Constants.CONTROL_CHANGE_EVENT_LEFT_INPUT:
                         if (uiPad.isCopyPressed()) {
-                            //System.out.printf("left copy pressed with valueId = %d\n", uiPad.getCopyPressedValueId());
                             uiPad.resetCopyPressed();
                             copyLeftInputValueToAllOthers();
                             switchToSelectedPair(padPair);
@@ -269,7 +266,6 @@ public class Controller implements MidiRescanEventListener {
                         break;
                     case Constants.CONTROL_CHANGE_EVENT_RIGHT_INPUT:
                         if (uiPad.isCopyPressed()) {
-                            //System.out.printf("right copy pressed with valueId = %d\n", uiPad.getCopyPressedValueId());
                             uiPad.resetCopyPressed();
                             copyPadPairValueToAllOthers();
                         } else {
@@ -279,7 +275,6 @@ public class Controller implements MidiRescanEventListener {
                     case Constants.CONTROL_CHANGE_EVENT_3RD_INPUT:
                         if (padPair > 0) {
                             if (uiPad.isCopyPressed()) {
-                                //System.out.printf("3rd zone copy pressed with valueId = %d\n", uiPad.getCopyPressedValueId());
                                 uiPad.resetCopyPressed();
                                 copy3rdZoneValueToAllOthers();
                             } else {
@@ -295,14 +290,6 @@ public class Controller implements MidiRescanEventListener {
                     uiPad.resetNameChanged();
                     updateComboBoxInput(true);
                 }
-				/*
-				tempMidiLevelBarsPanel.addNewBarData(
-						configFull.configPads[0].channel,
-						configFull.configPads[0].note,
-						configFull.configPads[0].altNote,
-						50);
-				tempMidiLevelBarsPanel.setHiHatLevel(configFull.configPads[0].pressrollNote);
-				*/
             }
         });
 
@@ -350,10 +337,8 @@ public class Controller implements MidiRescanEventListener {
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if (comboBoxInputChangedFromSet > 0) {
                     comboBoxInputChangedFromSet--;
-                    //System.out.printf("changedFromSet reduced to %d for %s\n", changedFromSet, label.getText());
                 } else {
                     Integer newInValue = uiPad.getComboBoxInput().getSelectionModel().getSelectedIndex();
-                    //System.out.printf("Setting %s to %s\n", label.getText(), newValue);
                     if (newInValue > -1) {
                         switchToSelectedPair(newInValue);
                     }
@@ -372,13 +357,10 @@ public class Controller implements MidiRescanEventListener {
                 } else {
                     if (parameter.intValue() >= Constants.CUSTOM_NAME_CHANGE_TEXT_START) {
                         if (parameter.intValue() < Constants.CUSTOM_NAME_CHANGE_GET_START) {
-                            // Custom Name changed
                             controlsChangedCustomName(parameter - Constants.CUSTOM_NAME_CHANGE_TEXT_START);
                         } else if (parameter.intValue() < Constants.CUSTOM_NAME_CHANGE_SEND_START) {
-                            // Get button pressed
                             sendSysexCustomNameRequest(parameter - Constants.CUSTOM_NAME_CHANGE_GET_START);
                         } else {
-                            // Send button pressed
                             sendSysexCustomName(parameter - Constants.CUSTOM_NAME_CHANGE_SEND_START);
                         }
                     }
@@ -443,10 +425,8 @@ public class Controller implements MidiRescanEventListener {
         topVBox.getChildren().add(mainMenuBar);
         topVBox.getChildren().add(uiGlobal.getUI());
         topVBox.getChildren().add(uiGlobalMisc.getUI());
-        //topVBox.setAlignment(Pos.TOP_CENTER);
 
         hBoxUIviews = new HBox(hBoxUIviewsGap);
-        //hBoxUIviews.setStyle("-fx-padding: 1.0 0.0 0.0 1.0");
         hBoxUIviews.setPadding(new Insets(hBoxUIviewsVPadding, hBoxUIviewsHPadding, 0.0, hBoxUIviewsHPadding));
 
         scrollPaneAllPanels = new ScrollPane();
@@ -496,7 +476,6 @@ public class Controller implements MidiRescanEventListener {
         if (uiGlobalMisc.getViewState() == Constants.PANEL_SHOW) {
             height -= globalMiscBarHeight;
         }
-        //Double width = height*2;
         Double width = sc.getWidth();
         Double controlH, controlW;
         Double mainWindowMaxWidth = 0.0;
@@ -517,7 +496,6 @@ public class Controller implements MidiRescanEventListener {
         } else {
             controlH= height/uiMidiLog.getVerticalControlsCount();
             midiLogHeight = height*0.95;
-            //midiLogWidth = mainWindowMinWidth*0.99;
             midiLogWidth = midiLogWidth*0.997;
         }
 
@@ -536,9 +514,7 @@ public class Controller implements MidiRescanEventListener {
                 scrollPaneAllPanels.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
                 scrollPaneAllPanels.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
             } else {
-                //scrollPaneAllPanels.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
                 scrollPaneAllPanels.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
-                //scrollPaneAllPanels.setVbarPolicy(ScrollBarPolicy.NEVER);
                 scrollPaneAllPanels.setHbarPolicy(ScrollBarPolicy.NEVER);
             }
         } else {
@@ -552,7 +528,6 @@ public class Controller implements MidiRescanEventListener {
                 topVBox.getChildren().add(hBoxUIviews);
             }
         }
-        //controlW = width - hBoxUIviewsGap;
         Double controlWdivider = 0.0;
         if (uiMisc.getViewState() == Constants.PANEL_SHOW) {
             controlWdivider += Constants.FX_MISC_CONTROL_WIDTH_MUL*1.000;
@@ -608,7 +583,6 @@ public class Controller implements MidiRescanEventListener {
             midiLogWidth -= hBoxUIviewsGap*correction*2;
         }
         if (uiMidiLog.getViewState() == Constants.PANEL_SHOW) {
-            //uiMidiLog.respondToResize(midiLogWidth, midiLogHeight, controlW, controlH);
             if (viewZoom > 0) {
                 if (midiLogWidth < controlW*3) {
                     midiLogWidth = controlW*3;

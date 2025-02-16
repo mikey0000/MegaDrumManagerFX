@@ -15,13 +15,13 @@ public class ConfigCustomName {
         id = i;
     }
 
-    public void copyToPropertiesConfiguration(PropertiesConfiguration prop, PropertiesConfigurationLayout layout, String prefix, Integer id) {
+    public void copyToPropertiesConfiguration(PropertiesConfiguration prop, PropertiesConfigurationLayout layout, String prefix, int id) {
         id++;
         prefix = prefix+"["+ id +"]";
         prop.setProperty(prefix, name);
     }
 
-    public void copyFromPropertiesConfiguration(PropertiesConfiguration prop, String prefix, Integer id) {
+    public void copyFromPropertiesConfiguration(PropertiesConfiguration prop, String prefix, int id) {
         id++;
         prefix = prefix+"["+ id +"]";
         name = prop.getString(prefix, name);

@@ -31,9 +31,6 @@ public class UICheckBox extends UIControl{
 		    	if (ignoreSyncState) {
 		    		setSyncState(Constants.SYNC_STATE_SYNCED);
 		    	} else {
-			    	//checkBox.setSelected(!newValue);
-					//System.out.printf("%s: new value = %s, old value = %s\n",label.getText(),(newValue ? "true" : "false"),(oldValue ? "true" : "false") );
-		    		//System.out.println("Checkbox changed");
 			    	if (changedFromSet > 0) {
 			    		changedFromSet = 0;
 			    	} else {
@@ -53,16 +50,14 @@ public class UICheckBox extends UIControl{
 		layout = new HBox();
 		layout.setAlignment(Pos.CENTER_LEFT);
 		layout.getChildren().addAll(checkBox);
-		//layout.setStyle("-fx-background-color: red");
-		//checkBox.setPadding(new Insets(50, 50, 50, 50));
-		initControl(layout);		
+		initControl(layout);
   }
 	
     @Override
     public void respondToResize(Double w, Double h) {
     	super.respondToResize(w, h);
-    	Double checkBoxFontSize = h*0.35;
-    	checkBox.setStyle("-fx-font-size: " + checkBoxFontSize.toString() + "pt");
+    	double checkBoxFontSize = h*0.35;
+    	checkBox.setStyle("-fx-font-size: " + checkBoxFontSize + "pt");
     }
     
     public void uiCtlSetValue(Boolean selected, Boolean setFromSysex) {

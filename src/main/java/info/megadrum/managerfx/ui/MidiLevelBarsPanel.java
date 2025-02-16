@@ -38,12 +38,12 @@ class BarData {
 class HitsPane extends Pane {
 	private Canvas canvas;
 	private GraphicsContext gc;
-	private Double canvasWidth;
-	private Double canvasHeight;
-	private Double paddingY, paddingX;
+	private double canvasWidth;
+	private double canvasHeight;
+	private double paddingY, paddingX;
 	private List<BarData> hitsDataList;
-	private Double lastHitMsPadding = 100.0;
-	private int fullMsTimeRange = 1000*30; // 30s
+	private double lastHitMsPadding = 100.0;
+	private int fullMsTimeRange = 1000*30;
 	private int maxInterval = 1000*1;
 	
 	public HitsPane() {
@@ -51,10 +51,10 @@ class HitsPane extends Pane {
 		getChildren().clear();
 		getChildren().add(canvas);
 		gc = canvas.getGraphicsContext2D();
-		hitsDataList = new ArrayList<BarData>();
+		hitsDataList = new ArrayList<>();
 	}
 	
-	public void respondToResize(Double w, Double h) {
+	public void respondToResize(double w, double h) {
 		canvasWidth = w*0.96;
 		canvasHeight = h*0.96;
 		paddingX = (w - canvasWidth)*0.5;
@@ -86,8 +86,8 @@ class HitsPane extends Pane {
 		if (hitsDataList.size() > 0) {
 			gc.setFill(Color.WHITE);
 			gc.fillRect(0, 0, canvasWidth, canvasHeight);
-			Double hitX, x, hitY;
-			Double hitTimeDiff = lastHitMsPadding;
+			double hitX, x, hitY;
+			double hitTimeDiff = lastHitMsPadding;
 			Color color;
 			int interval, level;
 			int pointer = hitsDataList.size() - 1;
@@ -124,14 +124,14 @@ public class MidiLevelBarsPanel extends Pane {
 	private int barDataPointer = 0;
 	private int lastHiHatLevel = 0;
 	private MidiLevelBar hhMidiLevelBar;
-	private Double width = 400.0;
-	private Double height = 200.0;
-	private Double barsTotalWidth;
-	private Double barWidth = 10.0;
-	private Double barHeight = 180.0 ;
-	private Double barsTotalHeight;
-	private Double paneHitsHeight;
-	private Double paneHitsWidth;
+	private double width = 400.0;
+	private double height = 200.0;
+	private double barsTotalWidth;
+	private double barWidth = 10.0;
+	private double barHeight = 180.0 ;
+	private double barsTotalHeight;
+	private double paneHitsHeight;
+	private double paneHitsWidth;
 	private int barsCount = 16;
 	private GridPane gridPaneTop;
 	private HBox hBoxBottom;
@@ -174,15 +174,10 @@ public class MidiLevelBarsPanel extends Pane {
 		hBoxBottom = new HBox();
 		vBoxLeft = new VBox();
 		paneRight = new Pane();
-		//paneRight.setStyle("-fx-background-color: lightgreen");
 		paneBars = new Pane();
-		//paneBars.setBackground(new Background(new BackgroundFill(Color.RED, null, getInsets())));
-		//paneBars.setStyle("-fx-background-color: orange");
 		paneHits = new HitsPane();
-		//paneHits.setStyle("-fx-background-color: blue");
 		paneHits.setPadding(new Insets(0, 0, 0, 0));
 		hBoxRoot = new HBox();
-		//hBoxRoot.setStyle("-fx-background-color: yellow");
 		hBoxRoot.setPadding(new Insets(0, 0, 0, 0));
 		getChildren().add(hBoxRoot);
 		vBoxLeft.setPadding(new Insets(0, 0, 0, 0));
@@ -198,13 +193,11 @@ public class MidiLevelBarsPanel extends Pane {
 		GridPane.setHalignment(labelTopHiHat, HPos.RIGHT);
 		GridPane.setValignment(labelTopHiHat, VPos.CENTER);
 		gridPaneTop.getChildren().addAll(labelTop, labelTopHiHat);
-		//gridPaneTop.setStyle("-fx-background-color: red");
 		paneBars.setPadding(new Insets(0, 0, 0, 0));
 		hBoxBottom.setPadding(new Insets(0, 0, 0, 0));
 		labelBottom = new Label("note numbers");
 		hBoxBottom.setAlignment(Pos.CENTER);
 		hBoxBottom.getChildren().add(labelBottom);
-		//hBoxBottom.setStyle("-fx-background-color: red");
 		vBoxLeft.getChildren().addAll(gridPaneTop,paneBars,hBoxBottom,paneHits);
 
 		panesRight = new ArrayList<Pane>();
@@ -277,19 +270,18 @@ public class MidiLevelBarsPanel extends Pane {
 			slidersPos.add(new Slider(0, 127, 63));
 			slidersPos.get(i).setDisable(true);
 		}
-		spinnerTimeRange = new SpinnerFast<Double>();
+		spinnerTimeRange = new SpinnerFast<>();
 		SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(10.0, 50.0, 30.0, 1.0);
 		spinnerTimeRange.setValueFactory(valueFactory);
 		spinnerTimeRange.getEditor().textProperty().addListener(new ChangeListener<String>() {
 
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				Double value = Double.valueOf(newValue);
-				paneHits.setTimeRange(value.intValue());
+				double value = Double.parseDouble(newValue);
+				paneHits.setTimeRange((int) value);
 			}
 			
 		});
-		//spinnerFast.setEditable(true);
 		spinnerMaxInterval = new SpinnerFast<Double>();
 		valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1.0, 5.0, 1.0, 0.1);
 		spinnerMaxInterval.setValueFactory(valueFactory);
@@ -297,12 +289,11 @@ public class MidiLevelBarsPanel extends Pane {
 
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				Double value = Double.valueOf(newValue);
+				double value = Double.parseDouble(newValue);
 				paneHits.setMaxInterval((int)(value*1000));
 			}
 			
 		});
-		//spinnerMaxInterval.setEditable(true);
 		labelInterval = new Label("Max interval");
 		paneRight.getChildren().addAll(spinnerMaxInterval, labelInterval);
 		labelFullRange = new Label("Full range");
@@ -321,12 +312,12 @@ public class MidiLevelBarsPanel extends Pane {
 		comboBoxBarCount.getSelectionModel().select((barsCount - 16)/4);
 	}
 	
-	public void respondToResize(Double w, Double h) {
+	public void respondToResize(double w, double h) {
 		width = w;
 		height = h;
 		setMinSize(width, height);
 		setMaxSize(width, height);
-		Double paneRightWidth = width*0.2;
+		double paneRightWidth = width*0.2;
 		paneRightWidth = (paneRightWidth > 120.0)?120.0:paneRightWidth;
 		barsTotalWidth = width - paneRightWidth;
 		vBoxLeft.setMinSize(barsTotalWidth, height);
@@ -337,11 +328,10 @@ public class MidiLevelBarsPanel extends Pane {
 		paneHitsWidth = barsTotalWidth;
 		barHeight = (barsTotalHeight>400.0)?barsTotalHeight*0.94:barsTotalHeight*0.9;
 		barWidth = barsTotalWidth/(barsCount + 2);
-		Double smallBarsHeight = (barsTotalHeight - barHeight)*0.5;
+		double smallBarsHeight = (barsTotalHeight - barHeight)*0.5;
 		gridPaneTop.getColumnConstraints().clear();
 		gridPaneTop.getColumnConstraints().add(new ColumnConstraints(barsTotalWidth*0.88));
 		gridPaneTop.getColumnConstraints().add(new ColumnConstraints(barsTotalWidth*0.12));
-		//gridPaneTop.getColumnConstraints().add(new ColumnConstraints(barWidth*1.5));
 		gridPaneTop.setMinSize(barsTotalWidth, smallBarsHeight);
 		gridPaneTop.setMaxSize(barsTotalWidth, smallBarsHeight);
 		hBoxBottom.setMinSize(barsTotalWidth, smallBarsHeight);
@@ -351,27 +341,25 @@ public class MidiLevelBarsPanel extends Pane {
 		paneHits.setMinSize(paneHitsWidth, paneHitsHeight);
 		paneHits.setMaxSize(paneHitsWidth, paneHitsHeight);
 		paneHits.respondToResize(paneHitsWidth, paneHitsHeight);
-		//vBoxLeft.getChildren().clear();
-		//vBoxLeft.getChildren().addAll(gridPaneTop,paneBars,hBoxBottom,paneHits);
-		
-		Double labelTopBottomFontSize = (barsTotalHeight - barHeight)*0.4;
+
+		double labelTopBottomFontSize = (barsTotalHeight - barHeight)*0.4;
 		labelTopBottomFontSize = (labelTopBottomFontSize>16.0)?16.0:labelTopBottomFontSize;
 		labelTop.setFont(new Font(labelTopBottomFontSize));
 		labelTopHiHat.setFont(new Font(labelTopBottomFontSize*0.8));
 		labelBottom.setFont(new Font(labelTopBottomFontSize));
 		
-		Double rowHight = (height*0.35)/panesRight.size();
-		Double paneHeight = rowHight*0.8;
-		Double paneWidth = paneRightWidth*0.46;
-		Double yPos = rowHight - paneHeight;
-		Double comboBoxBarCountFontSize = paneRightWidth*0.06;
+		double rowHight = (height*0.35)/panesRight.size();
+		double paneHeight = rowHight*0.8;
+		double paneWidth = paneRightWidth*0.46;
+		double yPos = rowHight - paneHeight;
+		double comboBoxBarCountFontSize = paneRightWidth*0.06;
 		comboBoxBarCountFontSize = (comboBoxBarCountFontSize > 10.0)?10.0:comboBoxBarCountFontSize;
 		comboBoxBarCountFontSize = (comboBoxBarCountFontSize > (paneHeight*0.3))?(paneHeight*0.3):comboBoxBarCountFontSize;
 		comboBoxBarCount.setMinSize(paneWidth, (paneHeight > 20.0)?20.0:paneHeight);
 		comboBoxBarCount.setMaxSize(paneWidth, (paneHeight > 20.0)?20.0:paneHeight);
-		comboBoxBarCount.setStyle("-fx-font-size: " + comboBoxBarCountFontSize.toString() + "pt");			
+		comboBoxBarCount.setStyle("-fx-font-size: " + comboBoxBarCountFontSize + "pt");
 
-		Double fontOnTheRightSize = paneRightWidth*0.08;
+		double fontOnTheRightSize = paneRightWidth*0.08;
 		fontOnTheRightSize = (fontOnTheRightSize > (paneHeight*0.4))?(paneHeight*0.4):fontOnTheRightSize;
 		Font fontOnTheRight = new Font(fontOnTheRightSize);
 		for (int i = 0; i < panesRight.size(); i++) {
@@ -397,23 +385,23 @@ public class MidiLevelBarsPanel extends Pane {
 		labelRimPos.setLayoutX(paneRightWidth - MidiLevelBar.getTextWidth(fontOnTheRight, labelRim.getText()));
 		labelRimPos.setLayoutY(panesRight.size()*rowHight + paneHeight);
 
-		Double sliderFontSize = paneHeight*0.55;
+		double sliderFontSize = paneHeight*0.55;
 		sliderFontSize = (sliderFontSize>8)?8:sliderFontSize;
 		for (int i = 0; i < slidersPos.size(); i++) {
 			slidersPos.get(i).setMinSize(paneRightWidth, paneHeight);
 			slidersPos.get(i).setMaxSize(paneRightWidth, paneHeight);
-			slidersPos.get(i).setStyle("-fx-font-size: " + sliderFontSize.toString()+ "pt");		
+			slidersPos.get(i).setStyle("-fx-font-size: " + sliderFontSize+ "pt");
 			slidersPos.get(i).setLayoutX(0);
 			slidersPos.get(i).setLayoutY((panesRight.size() + 1)*rowHight + i*paneHeight + paneHeight);
 		}
 		
-		Double spinnerButtonsFontSize = fontOnTheRightSize*0.8;
-		Double layoutY = (panesRight.size() + 1)*rowHight + slidersPos.size()*paneHeight + paneHeight*2;
+		double spinnerButtonsFontSize = fontOnTheRightSize*0.8;
+		double layoutY = (panesRight.size() + 1)*rowHight + slidersPos.size()*paneHeight + paneHeight*2;
 		spinnerMaxInterval.setMinSize(paneWidth, paneHeight);
 		spinnerMaxInterval.setMaxSize(paneWidth, paneHeight);
 		spinnerMaxInterval.setLayoutX(0);
 		spinnerMaxInterval.setLayoutY(layoutY);
-		spinnerMaxInterval.setStyle("-fx-font-size: " + spinnerButtonsFontSize.toString() + "pt");
+		spinnerMaxInterval.setStyle("-fx-font-size: " + spinnerButtonsFontSize + "pt");
 		labelInterval.setLayoutX(paneWidth*1.1);
 		labelInterval.setLayoutY(layoutY);
 		labelInterval.setFont(fontOnTheRight);
@@ -423,7 +411,7 @@ public class MidiLevelBarsPanel extends Pane {
 		spinnerTimeRange.setMaxSize(paneWidth, paneHeight);
 		spinnerTimeRange.setLayoutX(0);
 		spinnerTimeRange.setLayoutY(layoutY);
-		spinnerTimeRange.setStyle("-fx-font-size: " + spinnerButtonsFontSize.toString() + "pt");
+		spinnerTimeRange.setStyle("-fx-font-size: " + spinnerButtonsFontSize + "pt");
 		labelFullRange.setLayoutX(paneWidth*1.1);
 		labelFullRange.setLayoutY(layoutY);
 		labelFullRange.setFont(fontOnTheRight);
@@ -445,7 +433,6 @@ public class MidiLevelBarsPanel extends Pane {
 			int level = barDatas[pointer].level;
 			int interval = barDatas[pointer].interval;
 			midiLevelBars.get(maxBars - i - 1).setParameters(type, interval, note, level, true);
-			//midiLevelBars.get(maxBars - i - 1).respondToResize(barWidth, barHeight);
 		}
 	}
 	

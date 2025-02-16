@@ -17,18 +17,11 @@ public class FileManager {
     private FileChooser fileChooser;
     private Stage parent;
     private File file = null;
-    //private ConfigFileFilter configFileFilter;
-    //private BinFileFilter binFileFilter;
-    //private Properties prop;
     private PropertiesConfiguration fullConfig;
-    //private CombinedConfiguration cc;
 
     public FileManager (Stage parentWindow) {
         fileChooser = new FileChooser();
         parent = parentWindow;
-        //binFileFilter = new BinFileFilter();
-        //prop = new Properties();
-        //fullConfig = new PropertiesConfiguration();
     }
 
     public void saveConfigFull(ConfigFull config, File file) {
@@ -61,9 +54,7 @@ public class FileManager {
         if (!options.configFullPaths[options.lastConfig].equals("")) {
             fileChooser.setInitialDirectory(new File(options.configFullPaths[options.lastConfig]).getParentFile());
         }
-        //fileChooser.setSelectedFile(new File(options.configFileNames[options.lastConfig]));
         fileChooser.setInitialFileName(options.configFileNames[options.lastConfig]);
-        //returnVal = fileChooser.showSaveDialog(parent);
         file = fileChooser.showSaveDialog(parent);
         if(file != null) {
             result = true;
@@ -110,9 +101,7 @@ public class FileManager {
         if (!options.configFullPaths[options.lastConfig].equals("")) {
             fileChooser.setInitialDirectory(new File(options.configFullPaths[options.lastConfig]).getParentFile());
         }
-        //fileChooser.setSelectedFile(new File(options.configFileNames[options.lastConfig]));
         fileChooser.setInitialFileName(options.configFileNames[options.lastConfig]);
-        //returnVal = fileChooser.showSaveDialog(parent);
         file = fileChooser.showOpenDialog(parent);
         if (file != null) {
             if (file.exists()) {
@@ -151,7 +140,6 @@ public class FileManager {
         if (options.mcuType == 8) {
             stringNameMatch = "megadrumSTM32e_";
         }
-        //fileChooser
         file = fileChooser.showOpenDialog(parent);
         if (file != null) {
             options.lastFullPathFirmware = file.getAbsolutePath();
@@ -163,25 +151,6 @@ public class FileManager {
                         "File name must start with " + stringNameMatch + " !!!"
                 );
                 alert.showAndWait();
-                //WebView webView = new WebView();
-                //webView.getEngine().loadContent("<html><font size=4>Wrong firmware file selected<br></font></html>\n" +
-                //		"<html><font size=4>File name must start with " + stringNameMatch +" !!!</font></html>");
-                //webView.setPrefSize(300, 120);
-                //alert.getDialogPane().setContent(webView);
-	            /*
-				Timer warning_timer = new Timer();
-				warning_timer.schedule(new TimerTask() {
-
-					@Override
-					public void run() {
-						Platform.runLater(new Runnable() {
-							public void run() {
-								alert.showAndWait();
-							}
-						});
-					}
-				}, 50);
-				*/
             }
         }
         return file;

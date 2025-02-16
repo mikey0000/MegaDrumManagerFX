@@ -26,7 +26,6 @@ public class UI3rdZone implements PanelInterface {
 	private ArrayList<UIControl> allControls;
 	
 	static private final	Boolean zoneFromPizeo	= false;
-	//static private final	Boolean zoneFromSwitch 	= true;
 	private boolean			zoneType = zoneFromPizeo;
 	private Double			lastTitleHeight = 5.0;
 	private Boolean			showAdvanced = true;
@@ -67,7 +66,6 @@ public class UI3rdZone implements PanelInterface {
 		
 		uiSpinnerNoteMainNote = new UISpinnerNote("Note", true);
 		uiSpinnerNoteMainNote.setNoteIsMain(true);
-		//uiSpinnerNoteMainNote.setDisabledNoteAllowed(true);
 		allControls.add(uiSpinnerNoteMainNote);
 				
 		uiSpinnerThreshold = new UISpinner("Threshold", 0, 255, 0, 1, true);

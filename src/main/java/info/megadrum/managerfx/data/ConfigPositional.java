@@ -18,18 +18,18 @@ public class ConfigPositional {
         id = i;
     }
 
-    public void copyToPropertiesConfiguration(PropertiesConfiguration prop, PropertiesConfigurationLayout layout, String prefix, Integer id) {
+    public void copyToPropertiesConfiguration(PropertiesConfiguration prop, PropertiesConfigurationLayout layout, String prefix, int id) {
         id++;
-        prefix = prefix+"["+id.toString()+"].";
-        layout.setComment(prefix+"level", "\n#Input "+id.toString()+" positional settings");
+        prefix = prefix+"["+id+"].";
+        layout.setComment(prefix+"level", "\n#Input "+id+" positional settings");
         prop.setProperty(prefix+"level", level);
         prop.setProperty(prefix+"low", low);
         prop.setProperty(prefix+"high", high);
     }
 
-    public void copyFromPropertiesConfiguration(PropertiesConfiguration prop, String prefix, Integer id) {
+    public void copyFromPropertiesConfiguration(PropertiesConfiguration prop, String prefix, int id) {
         id++;
-        prefix = prefix+"["+id.toString()+"].";
+        prefix = prefix+"["+id+"].";
         level = Utils.validateInt(prop.getInt(prefix+"level", level),0,3,level);
         low = Utils.validateInt(prop.getInt(prefix+"low", low),0,100,low);
         high = Utils.validateInt(prop.getInt(prefix+"high", high),0,100,high);

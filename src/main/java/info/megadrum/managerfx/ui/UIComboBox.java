@@ -34,16 +34,10 @@ public class UIComboBox extends UIControl {
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 		    	if (changedFromSet > 0) {
 		    		changedFromSet--;
-		        	//System.out.printf("changedFromSet reduced to %d for %s\n", changedFromSet, label.getText());
 		    	} else {
-		        	//System.out.printf("Setting %s to %s\n", label.getText(), newValue);
-		    		//Integer newIntValue = listValues.indexOf(newValue);
 		    		Integer newIntValue = comboBox.getSelectionModel().getSelectedIndex();
-					//System.out.printf("%s: new value = %d, old value = %d\n",label.getText(),newIntValue.intValue(),intValue );
 		    		if (newIntValue > -1) {
 						if (intValue.intValue() != newIntValue.intValue()) {
-				        	//System.out.printf("Setting %s to %s\n", label.getText(), newValue);
-							//System.out.printf("%s: new value = %d, old value = %d\n",label.getText(),newIntValue.intValue(),intValue );
 							intValue = newIntValue;
 							fireControlChangeEvent(new ControlChangeEvent(this), 0);
 							if (syncState != Constants.SYNC_STATE_UNKNOWN) {
@@ -54,7 +48,6 @@ public class UIComboBox extends UIControl {
 								}
 								
 							}
-							//resizeFont();
 						}
 		    		}
 		    	}				
@@ -62,7 +55,6 @@ public class UIComboBox extends UIControl {
         });
 
 		comboBox.setEditable(false);
-		//comboBox.setMinWidth(240.0);
 		layout = new HBox();
 		layout.setAlignment(Pos.CENTER_LEFT);
 		layout.getChildren().addAll(comboBox);
@@ -112,21 +104,16 @@ public class UIComboBox extends UIControl {
     }
     
     public void uiCtlSetValue(Integer n, Boolean setFromSysex) {
-    	//String stringValue;
     	if (intValue.intValue() != n.intValue()) {
-        	//changedFromSet++;
         	changedFromSet = 1;
     	   	intValue = n;
         }
-    	//System.out.printf("changedFromSet = %d for %s\n", changedFromSet, label.getText());
     	if (setFromSysex) {
     		setSyncState(Constants.SYNC_STATE_SYNCED);
     		mdIntValue = n;
     	} else {
         	updateSyncStateConditional();
     	}
-	   	//stringValue = listValues.get(intValue);
-    	//System.out.printf("ComboBox: index = %d, string at this index = %s\n", intValue, stringValue);
     	comboBox.getSelectionModel().select(n);
    }
    

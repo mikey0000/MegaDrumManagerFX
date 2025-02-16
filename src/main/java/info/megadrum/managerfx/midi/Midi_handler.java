@@ -15,9 +15,6 @@ import info.megadrum.managerfx.utils.Utils;
 
 public class Midi_handler {
 
-    //private int nPorts;
-    //private int port;
-
     private MidiDevice midiin;
     private String midiInName = "";
     private MidiDevice midiout;
@@ -73,7 +70,6 @@ public class Midi_handler {
         dump_receiver.addMidiEventListener(new MidiEventListener() {
             @Override
             public void midiEventOccurred(MidiEvent evt) {
-                //System.out.println("dump_receiver event");
                 fireMidiEvent(new MidiEvent(this));
             }
 
@@ -150,19 +146,11 @@ public class Midi_handler {
     }
 
     public void sendMidiShort(byte [] buf) {
-        //System.out.printf("Preparing to send SysEx\n");
         if (midiout != null) {
-            //System.out.printf("midiout is not Null\n");
             if (midiout.isOpen()) {
-                //System.out.printf("midiout is open\n");
                 ShortMessage shortMessage = new ShortMessage();
-                //midiout.close();
-                //System.out.printf("midiout closed\n");
                 try {
-                    //midiout.open();
-                    //System.out.printf("midiout re-opened\n");
                     receiver = midiout.getReceiver();
-                    //System.out.printf("midiout provded receiver\n");
                 } catch (MidiUnavailableException e1) {
                     e1.printStackTrace();
                 }
@@ -180,7 +168,6 @@ public class Midi_handler {
                     }
                     receiver.send(shortMessage, -1);
                 } catch (InvalidMidiDataException e) {
-                    //e.printStackTrace();
                     Utils.show_error("Error sending Short MIDI message to port:\n" +
                             midiout.getDeviceInfo().getName() + "\n" +
                             "(" + e.getMessage() + ")");
@@ -205,7 +192,6 @@ public class Midi_handler {
                 }
                 thruReceiver.send(shortMessage, -1);
             } catch (InvalidMidiDataException e) {
-                // e.printStackTrace();
                 Utils.show_error("Error sending Short MIDI message to port:\n" +
                         midithru.getDeviceInfo().getName() + "\n" +
                         "(" + e.getMessage() + ")");
@@ -214,30 +200,18 @@ public class Midi_handler {
     }
 
     public void sendSysex(byte [] buf) {
-        //System.out.printf("Preparing to send SysEx\n");
         if (midiout != null) {
-            //System.out.printf("midiout is not Null\n");
             if (midiout.isOpen()) {
-                //System.out.printf("midiout is open\n");
                 SysexMessage	sysexMessage = new SysexMessage();
-                //midiout.close();
-                //System.out.printf("midiout closed\n");
                 try {
-                    //midiout.open();
-                    //System.out.printf("midiout re-opened\n");
                     receiver = midiout.getReceiver();
-                    //System.out.printf("midiout provded receiver\n");
                 } catch (MidiUnavailableException e1) {
                     e1.printStackTrace();
                 }
                 try {
                     sysexMessage.setMessage(buf, buf.length);
-                    //sysexMessage.setMessage(0xf0,buf, buf.length);
-                    //System.out.printf("trying to send\n");
                     receiver.send(sysexMessage, -1);
-                    //System.out.printf("SysEx has been sent\n");
                 } catch (InvalidMidiDataException e) {
-                    //e.printStackTrace();
                     Utils.show_error("Error sending Sysex MIDI message to port:\n" +
                             midiout.getDeviceInfo().getName() + "\n" +
                             "(" + e.getMessage() + ")");
@@ -247,7 +221,6 @@ public class Midi_handler {
     }
 
     public void sendSysexUpgrade(byte [] buf) {
-        //System.out.printf("Preparing to send SysEx\n");
         if (midiout != null) {
             if (!midiout.isOpen()) {
                 try {
@@ -265,7 +238,6 @@ public class Midi_handler {
             try {
                 sysexMessage.setMessage(buf, buf.length);
             } catch (InvalidMidiDataException e) {
-                //e.printStackTrace();
                 Utils.show_error("Error sending Sysex MIDI message to port:\n" +
                         midiout.getDeviceInfo().getName() + "\n" +
                         "(" + e.getMessage() + ")");

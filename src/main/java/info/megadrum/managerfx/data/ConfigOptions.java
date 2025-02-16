@@ -47,10 +47,10 @@ public class ConfigOptions implements java.io.Serializable {
         configFileNames = new String[Constants.CONFIGS_COUNT];
         configFullPaths = new String[Constants.CONFIGS_COUNT];
         configLoaded = new boolean[Constants.CONFIGS_COUNT];
-        Integer n;
-        for (Integer i = 0;i < Constants.CONFIGS_COUNT;i++) {
+        int n;
+        for (int i = 0;i < Constants.CONFIGS_COUNT;i++) {
             n = i + 1;
-            configFileNames[i] = "config"+n.toString();
+            configFileNames[i] = "config"+n;
             configFullPaths[i] = "";
             configLoaded[i] = false;
         }
@@ -66,9 +66,9 @@ public class ConfigOptions implements java.io.Serializable {
         prop.setProperty("showAdvancedSettings", showAdvancedSettings);
         prop.setProperty("interactive", liveUpdates);
         prop.setProperty("lastConfig", lastConfig);
-        for (Integer i = 0;i<Constants.CONFIGS_COUNT;i++) {
-            prop.setProperty("configFileName"+i.toString(), configFileNames[i]);
-            prop.setProperty("configFullPath"+i.toString(), configFullPaths[i]);
+        for (int i = 0;i<Constants.CONFIGS_COUNT;i++) {
+            prop.setProperty("configFileName"+i, configFileNames[i]);
+            prop.setProperty("configFullPath"+i, configFullPaths[i]);
         }
         prop.setProperty("lastFullPathFirmware", lastFullPathFirmware);
         prop.setProperty("lastFullPathSysex", lastFullPathSysex);
@@ -83,11 +83,11 @@ public class ConfigOptions implements java.io.Serializable {
         prop.setProperty("mainWindowSizeX", mainWindowSize.getX());
         prop.setProperty("mainWindowSizeY", mainWindowSize.getY());
         for (int i = 0;i<Constants.PANELS_COUNT;i++) {
-            prop.setProperty("framesPositions"+ ((Integer)i).toString()+"X", framesPositions[i].getX());
-            prop.setProperty("framesPositions"+ ((Integer)i).toString()+"Y", framesPositions[i].getY());
-            prop.setProperty("framesSizes"+ ((Integer)i).toString()+"W", framesSizes[i].getX());
-            prop.setProperty("framesSizes"+ ((Integer)i).toString()+"H", framesSizes[i].getY());
-            prop.setProperty("showPanels"+ ((Integer)i).toString(), showPanels[i]);
+            prop.setProperty("framesPositions"+ (i)+"X", framesPositions[i].getX());
+            prop.setProperty("framesPositions"+ (i)+"Y", framesPositions[i].getY());
+            prop.setProperty("framesSizes"+ (i)+"W", framesSizes[i].getX());
+            prop.setProperty("framesSizes"+ (i)+"H", framesSizes[i].getY());
+            prop.setProperty("showPanels"+ (i), showPanels[i]);
         }
         prop.setProperty("globalMiscViewState", globalMiscViewState);
         prop.setProperty("autoResize", autoResize);
@@ -110,9 +110,9 @@ public class ConfigOptions implements java.io.Serializable {
         showAdvancedSettings = prop.getBoolean("showAdvancedSettings", showAdvancedSettings);
         liveUpdates = prop.getBoolean("interactive", liveUpdates);
         lastConfig = Utils.validateInt(prop.getInt("lastConfig",lastConfig),0,Constants.CONFIGS_COUNT-1,lastConfig);
-        for (Integer i = 0;i<Constants.CONFIGS_COUNT;i++) {
-            configFileNames[i] = prop.getString("configFileName"+i.toString(), configFileNames[i]);
-            configFullPaths[i] = prop.getString("configFullPath"+i.toString(), configFullPaths[i]);
+        for (int i = 0;i<Constants.CONFIGS_COUNT;i++) {
+            configFileNames[i] = prop.getString("configFileName"+i, configFileNames[i]);
+            configFullPaths[i] = prop.getString("configFullPath"+i, configFullPaths[i]);
         }
         lastFullPathFirmware = prop.getString("lastFullPathFirmware", lastFullPathFirmware);
         lastFullPathSysex = prop.getString("lastFullPathSysex", lastFullPathSysex);
@@ -132,14 +132,14 @@ public class ConfigOptions implements java.io.Serializable {
         );
         for (int i = 0;i<Constants.PANELS_COUNT;i++) {
             framesPositions[i] = new Point2D (
-                    Utils.validateDouble(prop.getDouble("framesPositions"+ ((Integer)i).toString()+"X", 0.0),0.0,1600.0,0.0),
-                    Utils.validateDouble(prop.getDouble("framesPositions"+ ((Integer)i).toString()+"Y", 0.0),0.0,600.0,0.0)
+                    Utils.validateDouble(prop.getDouble("framesPositions"+ i+"X", 0.0),0.0,1600.0,0.0),
+                    Utils.validateDouble(prop.getDouble("framesPositions"+ i+"Y", 0.0),0.0,600.0,0.0)
             );
             framesSizes[i] = new Point2D (
-                    Utils.validateDouble(prop.getDouble("framesSizes"+ ((Integer)i).toString()+"W", 0.0),0.0,3200.0,0.0),
-                    Utils.validateDouble(prop.getDouble("framesSizes"+ ((Integer)i).toString()+"H", 0.0),0.0,2000.0,0.0)
+                    Utils.validateDouble(prop.getDouble("framesSizes"+ i+"W", 0.0),0.0,3200.0,0.0),
+                    Utils.validateDouble(prop.getDouble("framesSizes"+ i+"H", 0.0),0.0,2000.0,0.0)
             );
-            showPanels[i] = Utils.validateInt(prop.getInt("showPanels"+ ((Integer)i).toString(),showPanels[i]),0,2,showPanels[i]);
+            showPanels[i] = Utils.validateInt(prop.getInt("showPanels"+ i,showPanels[i]),0,2,showPanels[i]);
         }
         globalMiscViewState = Utils.validateInt(prop.getInt("globalMiscViewState", globalMiscViewState),0,1,globalMiscViewState);
         autoResize = prop.getBoolean("autoResize", autoResize);
