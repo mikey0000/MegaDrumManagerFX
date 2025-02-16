@@ -6,7 +6,6 @@ import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.PropertiesConfigurationLayout;
 
 public class ConfigCustomName {
-    //public int [] yValues = {2, 32, 64, 96, 128, 160, 192, 224, 255};
     public String name = "Custom__";
     public int syncState = Constants.SYNC_STATE_UNKNOWN;
     public boolean sysexReceived = false;
@@ -18,27 +17,25 @@ public class ConfigCustomName {
 
     public void copyToPropertiesConfiguration(PropertiesConfiguration prop, PropertiesConfigurationLayout layout, String prefix, Integer id) {
         id++;
-        //Integer c;
-        prefix = prefix+"["+id.toString()+"]";
+        prefix = prefix+"["+ id +"]";
         prop.setProperty(prefix, name);
     }
 
     public void copyFromPropertiesConfiguration(PropertiesConfiguration prop, String prefix, Integer id) {
         id++;
-        //Integer c;
-        prefix = prefix+"["+id.toString()+"]";
+        prefix = prefix+"["+ id +"]";
         name = prop.getString(prefix, name);
     }
 
     public byte[] getSysexFromConfig() {
-        byte [] sysex_byte = new byte[2];
+        byte [] sysex_byte;
         byte [] sysex = new byte[Constants.MD_SYSEX_CUSTOM_NAME_SIZE];
         String nameString;
         byte [] nameBytes;
         int i = 0;
         sysex[i++] = Constants.SYSEX_START;
         sysex[i++] = Constants.MD_SYSEX;
-        sysex[i++] = 0; //(byte) chainId;
+        sysex[i++] = 0;
         sysex[i++] = Constants.MD_SYSEX_CUSTOM_NAME;
         sysex[i++] = (byte)id;
 
@@ -67,5 +64,4 @@ public class ConfigCustomName {
             name = String.copyValueOf(bytes_string).trim();
         }
     }
-
 }

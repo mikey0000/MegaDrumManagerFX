@@ -37,7 +37,6 @@ public class UIUpgrade {
 	public final static int UPGRADE_FAILED = 2;	
 	private int upgradeResult = UPGRADE_NOT_PERFORMED;
 	private Boolean upgradeIsInProgress = false;
-	//private TextArea textAreaInstruction;
 	private Label textAreaInstruction;
 	private Button buttonStart, buttonCancel, buttonClose, buttonOpen;
 	private Label labelFile;
@@ -67,7 +66,6 @@ public class UIUpgrade {
 		textAreaInstruction.setPadding(new Insets(2, 2, 2, 2));
 		textAreaInstruction.setMinHeight(400);
 		textAreaInstruction.setMaxHeight(400);
-		//textAreaInstruction.setDisable(true);
 		VBox vBoxTop = new VBox();
 		vBoxTop.setPadding(new Insets(2, 2, 2, 2));
 		vBoxTop.setAlignment(Pos.TOP_CENTER);

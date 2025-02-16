@@ -3,16 +3,10 @@ package info.megadrum.managerfx.ui;
 import javax.swing.event.EventListenerList;
 
 import info.megadrum.managerfx.data.ConfigCustomName;
-import info.megadrum.managerfx.utils.Constants;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TitledPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 
 public class UIPadsExtra extends UIPanel implements PanelInterface {
 	private TabPane			tabPane;

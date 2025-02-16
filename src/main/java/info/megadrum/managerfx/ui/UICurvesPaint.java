@@ -1,12 +1,8 @@
 package info.megadrum.managerfx.ui;
 
-import java.awt.BasicStroke;
-import java.awt.Graphics2D;
 import java.util.Arrays;
 
 import javax.swing.event.EventListenerList;
-
-//import org.apache.commons.collections.functors.IfClosure;
 
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;

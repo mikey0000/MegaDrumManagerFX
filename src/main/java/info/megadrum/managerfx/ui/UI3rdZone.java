@@ -5,19 +5,9 @@ import java.util.ArrayList;
 import javax.swing.event.EventListenerList;
 
 import info.megadrum.managerfx.data.Config3rd;
-import info.megadrum.managerfx.data.ConfigPad;
 import info.megadrum.managerfx.utils.Constants;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Control;
-import javafx.scene.control.Separator;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.ToolBar;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 public class UI3rdZone implements PanelInterface {

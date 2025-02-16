@@ -9,13 +9,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
-//import javax.rmi.CORBA.Util;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.Transmitter;
-import javax.sound.sampled.ReverbType;
 import javax.swing.event.EventListenerList;
 
 import info.megadrum.managerfx.utils.Constants;

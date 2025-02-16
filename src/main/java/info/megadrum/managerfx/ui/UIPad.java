@@ -1,10 +1,7 @@
 package info.megadrum.managerfx.ui;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.event.EventListenerList;
 
@@ -14,19 +11,11 @@ import info.megadrum.managerfx.data.ConfigPositional;
 import info.megadrum.managerfx.utils.Constants;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.ToolBar;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 public class UIPad extends UIPanel implements PanelInterface {

@@ -4,15 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.megadrum.managerfx.utils.Constants;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-
 
 public class MidiRaw extends VBox {
 	private Text textHeader;
@@ -28,7 +24,6 @@ public class MidiRaw extends VBox {
 	private StringBuilder htmlHead;
 	private StringBuilder htmlTail;
 	
-	//private VBox vBoxRoot;
 	private VBox vBoxHeader;
 
 	public MidiRaw () {

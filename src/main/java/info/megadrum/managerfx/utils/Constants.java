@@ -1,7 +1,5 @@
 package info.megadrum.managerfx.utils;
 
-import java.util.Arrays;
-import java.util.List;
 import javafx.scene.paint.Color;
 
 public interface Constants {

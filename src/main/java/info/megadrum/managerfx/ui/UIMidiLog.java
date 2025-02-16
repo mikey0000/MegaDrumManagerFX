@@ -1,10 +1,7 @@
 package info.megadrum.managerfx.ui;
 
-import info.megadrum.managerfx.utils.Constants;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Font;
 
 public class UIMidiLog extends UIPanel implements PanelInterface {
 	private TabPane				tabPane;

@@ -26,7 +26,7 @@ public class Config3rd {
     public void copyToPropertiesConfiguration(PropertiesConfiguration prop, PropertiesConfigurationLayout layout, String prefix, Integer id) {
         id = id*2+2;
         Integer rim = id+1;
-        prefix = prefix+"["+id.toString()+"+"+rim.toString()+"].";
+        prefix = prefix+"["+ id +"+"+ rim +"].";
         layout.setComment(prefix+"note", "\n#Third zone for intputs "+id.toString() + " and " + rim.toString() + " settings");
         prop.setProperty(prefix+"disabled", disabled);
         prop.setProperty(prefix+"note", note);

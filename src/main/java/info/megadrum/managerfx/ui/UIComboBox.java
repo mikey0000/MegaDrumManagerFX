@@ -1,20 +1,13 @@
 package info.megadrum.managerfx.ui;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import info.megadrum.managerfx.utils.Constants;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Control;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.text.Font;
 
 public class UIComboBox extends UIControl {
 	private ComboBox<String> comboBox;

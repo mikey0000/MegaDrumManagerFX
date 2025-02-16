@@ -2,15 +2,7 @@ package info.megadrum.managerfx.ui;
 
 import javax.swing.event.EventListenerList;
 
-//import org.apache.commons.collections.ResettableIterator;
-
-//import javax.swing.event.EventListenerList;
-
 import info.megadrum.managerfx.utils.Constants;
-import javafx.beans.property.ObjectProperty;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
-import javafx.css.PseudoClass;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -20,13 +12,10 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Skin;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;

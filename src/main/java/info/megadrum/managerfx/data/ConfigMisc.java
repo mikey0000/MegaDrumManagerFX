@@ -1,6 +1,5 @@
 package info.megadrum.managerfx.data;
 
-
 import info.megadrum.managerfx.utils.Constants;
 import info.megadrum.managerfx.utils.Utils;
 import org.apache.commons.configuration2.PropertiesConfiguration;

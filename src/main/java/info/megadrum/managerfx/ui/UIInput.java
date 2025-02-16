@@ -6,22 +6,15 @@ import java.util.List;
 
 import javax.swing.event.EventListenerList;
 
-import info.megadrum.managerfx.data.ConfigMisc;
 import info.megadrum.managerfx.data.ConfigPad;
 import info.megadrum.managerfx.data.ConfigPositional;
 import info.megadrum.managerfx.utils.Constants;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Control;
-import javafx.scene.control.Separator;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 public class UIInput implements PanelInterface {
-//	private VBox layout;
+
 	private MdTitledPane	titledPane;
 	
 	private UIComboBox 		uiComboBoxName;

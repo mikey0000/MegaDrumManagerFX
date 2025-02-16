@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-//import org.omg.CORBA.CustomMarshal;
-
 import info.megadrum.managerfx.data.Config3rd;
 import info.megadrum.managerfx.data.ConfigFull;
 import info.megadrum.managerfx.data.ConfigOptions;
@@ -58,7 +56,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-//import javafx.scene.web.WebView;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 

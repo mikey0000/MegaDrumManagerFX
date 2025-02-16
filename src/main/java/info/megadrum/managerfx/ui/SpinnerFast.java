@@ -1,6 +1,5 @@
 package info.megadrum.managerfx.ui;
 
-import info.megadrum.managerfx.utils.Constants;
 import javafx.animation.AnimationTimer;
 import javafx.css.PseudoClass;
 import javafx.event.EventHandler;

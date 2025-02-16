@@ -2,19 +2,14 @@ package info.megadrum.managerfx.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import javax.swing.JOptionPane;
 import javax.swing.event.EventListenerList;
 
 import info.megadrum.managerfx.data.ConfigGlobalMisc;
-import info.megadrum.managerfx.data.ConfigMisc;
 import info.megadrum.managerfx.utils.Constants;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
@@ -31,11 +26,8 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
 public class UIGlobalMisc {
 	

@@ -6,24 +6,15 @@ import java.util.List;
 
 import javax.swing.event.EventListenerList;
 
-import info.megadrum.managerfx.data.ConfigMisc;
 import info.megadrum.managerfx.data.ConfigPedal;
 import info.megadrum.managerfx.utils.Constants;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.ToolBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 
 public class UIPedal extends UIPanel implements PanelInterface {
 	private HBox		toolBar;

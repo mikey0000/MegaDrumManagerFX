@@ -3,13 +3,9 @@ package info.megadrum.managerfx.ui;
 import info.megadrum.managerfx.utils.Constants;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
 
 public class UICheckBox extends UIControl{
 	

@@ -2,15 +2,11 @@ package info.megadrum.managerfx.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EventObject;
 import java.util.List;
 
 import javax.swing.event.EventListenerList;
 
-import info.megadrum.managerfx.Controller;
 import info.megadrum.managerfx.data.ConfigOptions;
-import info.megadrum.managerfx.midi.MidiEvent;
-import info.megadrum.managerfx.midi.MidiEventListener;
 import info.megadrum.managerfx.midi.MidiRescanEvent;
 import info.megadrum.managerfx.midi.MidiRescanEventListener;
 import info.megadrum.managerfx.utils.Constants;
