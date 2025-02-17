@@ -29,292 +29,276 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class UICurves {
-	private VBox		vBox;
-	private GridPane	gridPaneSpinners;
-	private HBox		toolBarNavigator;
-	private HBox		toolBarTop;
-	private Button 		buttonGet;
-	private Button 		buttonSend;
-	private Button 		buttonGetAll;
-	private Button 		buttonSendAll;
-	private Button 		buttonLoad;
-	private Button 		buttonSave;
-	
-	private UICurvesPaint	curvesPaint;
-	
-	private Label		labelCurve;
-	private ComboBox<String>	comboBoxCurve;
-	private	Button		buttonFirst;
-	private	Button		buttonPrev;
-	private	Button		buttonNext;
-	private	Button		buttonLast;
-	private ArrayList<SpinnerFast<Integer>> allSpinners;
-	private Integer[]	changedFromSetSpinners;
+    private final VBox vBox;
+    private final HBox toolBarNavigator;
+    private final HBox toolBarTop;
+    private final Button buttonGet;
+    private final Button buttonSend;
+    private final Button buttonGetAll;
+    private final Button buttonSendAll;
+    private final Button buttonLoad;
+    private final Button buttonSave;
 
-	
-	private int			syncState = Constants.SYNC_STATE_UNKNOWN;
-	private Boolean		sysexReceived = false;
-	private static final Double leftSpacer = 16.0;
-	
-	protected EventListenerList listenerList = new EventListenerList();
-	
-	public void addControlChangeEventListener(ControlChangeEventListener listener) {
-		listenerList.add(ControlChangeEventListener.class, listener);
-	}
-	public void removeControlChangeEventListener(ControlChangeEventListener listener) {
-		listenerList.remove(ControlChangeEventListener.class, listener);
-	}
-	protected void fireControlChangeEvent(ControlChangeEvent evt, Integer parameter) {
-		Object[] listeners = listenerList.getListenerList();
-		for (int i = 0; i < listeners.length; i = i+2) {
-			if (listeners[i] == ControlChangeEventListener.class) {
-				((ControlChangeEventListener) listeners[i+1]).controlChangeEventOccurred(evt, parameter);
-			}
-		}
-	}
+    private final UICurvesPaint curvesPaint;
 
-	public UICurves() {
-		toolBarTop = new HBox();
-		toolBarTop.setAlignment(Pos.CENTER_LEFT);
-		buttonGet = new Button("Get");
-		buttonSend = new Button("Send");
-		buttonGetAll = new Button("GetAll");
-		buttonSendAll = new Button("SendAll");
-		buttonLoad = new Button("Load");
-		buttonSave = new Button("Save");
-		toolBarTop.getChildren().addAll(buttonGet,buttonSend,buttonGetAll,buttonSendAll,new Separator(Orientation.VERTICAL),buttonLoad,buttonSave);
+    private final Label labelCurve;
+    private final ComboBox<String> comboBoxCurve;
+    private final Button buttonFirst;
+    private final Button buttonPrev;
+    private final Button buttonNext;
+    private final Button buttonLast;
+    private final ArrayList<SpinnerFast<Integer>> allSpinners;
+    private final Integer[] changedFromSetSpinners;
 
-		toolBarNavigator = new HBox();
-		toolBarNavigator.setAlignment(Pos.CENTER_LEFT);
-		labelCurve = new Label("Curve:");
-		comboBoxCurve = new ComboBox<String>();
-		buttonFirst = new Button("First");
-		buttonPrev = new Button("Prev");
-		buttonNext = new Button("Next");
-		buttonLast = new Button("Last");
-		toolBarNavigator.getChildren().addAll( labelCurve, comboBoxCurve, buttonFirst, buttonPrev, buttonNext, buttonLast);
-	
 
-		curvesPaint = new UICurvesPaint();
-		curvesPaint.addControlChangeEventListener(new ControlChangeEventListener() {
-			
-			@Override
-			public void controlChangeEventOccurred(ControlChangeEvent evt, Integer parameter) {
-				fireControlChangeEvent(new ControlChangeEvent(this), Constants.CONTROL_CHANGE_EVENT_CURVE);
-				setSpinnersFromCurve();
-				testSyncState();
-			}
-		});
-		comboBoxCurve.getItems().clear();
-		comboBoxCurve.getItems().addAll(Arrays.asList(Constants.CURVES_LIST));
-		comboBoxCurve.getSelectionModel().select(0);
-		BorderPane borderPane = new BorderPane(curvesPaint);
-		Pane leftPane = new Pane();
-		leftPane.setPrefWidth(leftSpacer);
-		borderPane.setLeft(leftPane);
-		Pane topPane = new Pane();
-		topPane.setPrefHeight(5);
-		borderPane.setTop(topPane);
-		vBox = new VBox(1);
-		vBox.setStyle("-fx-border-width: 2px; -fx-padding: 2.0 2.0 2.0 2.0; -fx-border-color: #2e8b57");
-		vBox.setStyle("-fx-padding: 0.0em 0.0em 0.2em 0.0em");
-		//vBox.getChildren().addAll(toolBarTop,toolBarNavigator,curvesPaint);
-		vBox.getChildren().addAll(toolBarTop,toolBarNavigator,borderPane);
-		allSpinners = new ArrayList<SpinnerFast<Integer>>();
-		gridPaneSpinners = new GridPane();
-		gridPaneSpinners.setMinHeight(30);
-		gridPaneSpinners.setMaxHeight(30);
-		Pane spacer1 = new Pane();
-		GridPane.setConstraints(spacer1, 0, 0);
-		GridPane.setHalignment(spacer1, HPos.CENTER);
-		GridPane.setValignment(spacer1, VPos.CENTER);
-		gridPaneSpinners.getChildren().add(spacer1);
-		gridPaneSpinners.getColumnConstraints().add(new ColumnConstraints(leftSpacer + 8));
-		spacer1.setMinWidth(leftSpacer + 8);
-		spacer1.setMaxWidth(leftSpacer + 8);
-		SpinnerValueFactory<Integer> valueFactory;
-		changedFromSetSpinners = new Integer[9];
-		
-		for (int i = 0; i < 9; i++) {
-			final int iFinal = i;
-			changedFromSetSpinners[i] = 0;
-			valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 255, 2, 1);
-			allSpinners.add(new SpinnerFast<Integer>());
-			allSpinners.get(i).getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_VERTICAL);
-			//allSpinners.get(i).getEditor().setMinSize(30, 20);
-			//allSpinners.get(i).getEditor().setMaxSize(30, 20);
-			allSpinners.get(i).setValueFactory(valueFactory);
-			allSpinners.get(i).setMaxSize(26, 30);
-			allSpinners.get(i).setMinSize(26, 30);
-			allSpinners.get(i).getEditor().setFont(new Font(8));
-			allSpinners.get(i).getEditor().setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
-			gridPaneSpinners.getColumnConstraints().add(new ColumnConstraints(32));
-			GridPane.setConstraints(allSpinners.get(i), i + 1, 0);
-			GridPane.setHalignment(allSpinners.get(i), HPos.CENTER);
-			GridPane.setValignment(allSpinners.get(i), VPos.CENTER);
-			gridPaneSpinners.getChildren().add(allSpinners.get(i));
-			final Integer sp = i;
-			allSpinners.get(i).getEditor().textProperty().addListener(new ChangeListener<String>() {
+    private Boolean sysexReceived = false;
+    private static final Double leftSpacer = 16.0;
 
-				@Override
-				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-					curvesPaint.setYvalue(sp, Integer.valueOf(newValue));
-					testSyncState();
-					if (changedFromSetSpinners[iFinal] > 0) {
-						changedFromSetSpinners[iFinal] = 0;
-					} else {
-						//System.out.printf("Spinner %d changed value to %d\n", sp, Integer.valueOf(newValue));
-						fireControlChangeEvent(new ControlChangeEvent(this), Constants.CONTROL_CHANGE_EVENT_CURVE);
-					}
-				}
-				
-			});
-			allSpinners.get(i).setStyle("-fx-font-size: 5pt");
-		}
-		vBox.getChildren().add(gridPaneSpinners);
-		vBox.setAlignment(Pos.TOP_CENTER);
-		setSyncState(Constants.SYNC_STATE_UNKNOWN);
-		setSpinnersFromCurve();
-		toolBarTop.setStyle("-fx-padding: 0.1em 0.0em 0.2em 0.01em");
-		toolBarNavigator.setStyle("-fx-padding: 0.0em 0.0em 0.15em 0.01em");
-	}
+    protected EventListenerList listenerList = new EventListenerList();
 
-	public Node getUI() {
-		return (Node) vBox;
-	}
+    public void addControlChangeEventListener(ControlChangeEventListener listener) {
+        listenerList.add(ControlChangeEventListener.class, listener);
+    }
 
-	public void respondToResize (Double w, Double h, Double controlW, Double controlH) {
-		Double comboBoxFontHeight = controlH*Constants.FX_COMBOBOX_FONT_SCALE;
-		if (comboBoxFontHeight > Constants.FX_COMBOBOX_FONT_MAX_SIZE) {
-			comboBoxFontHeight = Constants.FX_COMBOBOX_FONT_MAX_SIZE;
-		}
-		Double buttonFontSize = controlH*Constants.FX_BUTTONS_FONT_SCALE;
-		if (buttonFontSize > Constants.FX_BUTTONS_FONT_MAX_SIZE) {
-			buttonFontSize = Constants.FX_BUTTONS_FONT_MAX_SIZE;
-		}
-		toolBarTop.setStyle("-fx-font-size: " + buttonFontSize.toString() + "pt");
-		toolBarNavigator.setStyle("-fx-font-size: " + buttonFontSize.toString() + "pt");
-		comboBoxCurve.setStyle("-fx-font-size: " + comboBoxFontHeight.toString() + "pt");
-		toolBarTop.setMaxWidth(vBox.getWidth()*0.99);
-		toolBarTop.setMaxHeight(controlH);
-		toolBarNavigator.setMaxWidth(vBox.getWidth()*0.99);
-		toolBarNavigator.setMaxHeight(controlH);
-		comboBoxCurve.setMinWidth(controlW);
-		comboBoxCurve.setMaxWidth(controlW);
-		labelCurve.setFont(new Font(controlH*0.4));
-		labelCurve.setMinWidth(controlH*1.3);
-		labelCurve.setMaxWidth(controlH*1.3);
-	}
+    public void removeControlChangeEventListener(ControlChangeEventListener listener) {
+        listenerList.remove(ControlChangeEventListener.class, listener);
+    }
 
-	private void setSpinnersFromCurve() {
-		int [] v;
-		v = new int[9];
-		curvesPaint.getYvalues(v);
-		for (int i = 0; i < 9; i++) {
-			if (allSpinners.get(i).getValueFactory().getValue().intValue() != v[i]) {
-				changedFromSetSpinners[i] = 1;
-				allSpinners.get(i).getValueFactory().setValue(v[i]);
-			}
-		}
-	}
-	
-	public void setYvalues(int [] values, Boolean setFromSysex) {
-		curvesPaint.setYvalues(values, setFromSysex);
-		if (setFromSysex) {
-			setSysexReceived(true);
-			testSyncState();
-		}
-		int [] v;
-		v = new int[9];
-		curvesPaint.getYvalues(v);
-		setSpinnersFromCurve();
-	}
+    protected void fireControlChangeEvent(ControlChangeEvent evt, Integer parameter) {
+        Object[] listeners = listenerList.getListenerList();
+        for (int i = 0; i < listeners.length; i = i + 2) {
+            if (listeners[i] == ControlChangeEventListener.class) {
+                ((ControlChangeEventListener) listeners[i + 1]).controlChangeEventOccurred(evt, parameter);
+            }
+        }
+    }
 
-	public void setMdYvalues(int [] values) {
-		curvesPaint.setMdYvalues(values);
-	}
+    public UICurves() {
+        toolBarTop = new HBox();
+        toolBarTop.setAlignment(Pos.CENTER_LEFT);
+        buttonGet = new Button("Get");
+        buttonSend = new Button("Send");
+        buttonGetAll = new Button("GetAll");
+        buttonSendAll = new Button("SendAll");
+        buttonLoad = new Button("Load");
+        buttonSave = new Button("Save");
+        toolBarTop.getChildren().addAll(buttonGet, buttonSend, buttonGetAll, buttonSendAll, new Separator(Orientation.VERTICAL), buttonLoad, buttonSave);
 
-	public void getYvalues(int [] values) {
-		curvesPaint.getYvalues(values);
-	}
+        toolBarNavigator = new HBox();
+        toolBarNavigator.setAlignment(Pos.CENTER_LEFT);
+        labelCurve = new Label("Curve:");
+        comboBoxCurve = new ComboBox<>();
+        buttonFirst = new Button("First");
+        buttonPrev = new Button("Prev");
+        buttonNext = new Button("Next");
+        buttonLast = new Button("Last");
+        toolBarNavigator.getChildren().addAll(labelCurve, comboBoxCurve, buttonFirst, buttonPrev, buttonNext, buttonLast);
 
-	public Button getButtonGet() {
-		return buttonGet;
-	}
 
-	public Button getButtonSend() {
-		return buttonSend;
-	}
+        curvesPaint = new UICurvesPaint();
+        curvesPaint.addControlChangeEventListener(new ControlChangeEventListener() {
 
-	public Button getButtonGetAll() {
-		return buttonGetAll;
-	}
+            @Override
+            public void controlChangeEventOccurred(ControlChangeEvent evt, int parameter) {
+                fireControlChangeEvent(new ControlChangeEvent(this), Constants.CONTROL_CHANGE_EVENT_CURVE);
+                setSpinnersFromCurve();
+                testSyncState();
+            }
+        });
+        comboBoxCurve.getItems().clear();
+        comboBoxCurve.getItems().addAll(Arrays.asList(Constants.CURVES_LIST));
+        comboBoxCurve.getSelectionModel().select(0);
+        BorderPane borderPane = new BorderPane(curvesPaint);
+        Pane leftPane = new Pane();
+        leftPane.setPrefWidth(leftSpacer);
+        borderPane.setLeft(leftPane);
+        Pane topPane = new Pane();
+        topPane.setPrefHeight(5);
+        borderPane.setTop(topPane);
+        vBox = new VBox(1);
+        vBox.setStyle("-fx-border-width: 2px; -fx-padding: 2.0 2.0 2.0 2.0; -fx-border-color: #2e8b57");
+        vBox.setStyle("-fx-padding: 0.0em 0.0em 0.2em 0.0em");
+        vBox.getChildren().addAll(toolBarTop, toolBarNavigator, borderPane);
+        allSpinners = new ArrayList<>();
+        GridPane gridPaneSpinners = new GridPane();
+        gridPaneSpinners.setMinHeight(30);
+        gridPaneSpinners.setMaxHeight(30);
+        Pane spacer1 = new Pane();
+        GridPane.setConstraints(spacer1, 0, 0);
+        GridPane.setHalignment(spacer1, HPos.CENTER);
+        GridPane.setValignment(spacer1, VPos.CENTER);
+        gridPaneSpinners.getChildren().add(spacer1);
+        gridPaneSpinners.getColumnConstraints().add(new ColumnConstraints(leftSpacer + 8));
+        spacer1.setMinWidth(leftSpacer + 8);
+        spacer1.setMaxWidth(leftSpacer + 8);
+        SpinnerValueFactory<Integer> valueFactory;
+        changedFromSetSpinners = new Integer[9];
 
-	public Button getButtonSendAll() {
-		return buttonSendAll;
-	}
+        for (int i = 0; i < 9; i++) {
+            final int iFinal = i;
+            changedFromSetSpinners[i] = 0;
+            valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 255, 2, 1);
+            allSpinners.add(new SpinnerFast<>());
+            allSpinners.get(i).getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_VERTICAL);
+            allSpinners.get(i).setValueFactory(valueFactory);
+            allSpinners.get(i).setMaxSize(26, 30);
+            allSpinners.get(i).setMinSize(26, 30);
+            allSpinners.get(i).getEditor().setFont(new Font(8));
+            allSpinners.get(i).getEditor().setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+            gridPaneSpinners.getColumnConstraints().add(new ColumnConstraints(32));
+            GridPane.setConstraints(allSpinners.get(i), i + 1, 0);
+            GridPane.setHalignment(allSpinners.get(i), HPos.CENTER);
+            GridPane.setValignment(allSpinners.get(i), VPos.CENTER);
+            gridPaneSpinners.getChildren().add(allSpinners.get(i));
+            final Integer sp = i;
+            allSpinners.get(i).getEditor().textProperty().addListener(new ChangeListener<>() {
 
-	public Button getButtonLoad() {
-		return buttonLoad;
-	}
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    curvesPaint.setYvalue(sp, Integer.parseInt(newValue));
+                    testSyncState();
+                    if (changedFromSetSpinners[iFinal] > 0) {
+                        changedFromSetSpinners[iFinal] = 0;
+                    } else {
+                        fireControlChangeEvent(new ControlChangeEvent(this), Constants.CONTROL_CHANGE_EVENT_CURVE);
+                    }
+                }
 
-	public Button getButtonSave() {
-		return buttonSave;
-	}
+            });
+            allSpinners.get(i).setStyle("-fx-font-size: 5pt");
+        }
+        vBox.getChildren().add(gridPaneSpinners);
+        vBox.setAlignment(Pos.TOP_CENTER);
+        setSyncState(Constants.SYNC_STATE_UNKNOWN);
+        setSpinnersFromCurve();
+        toolBarTop.setStyle("-fx-padding: 0.1em 0.0em 0.2em 0.01em");
+        toolBarNavigator.setStyle("-fx-padding: 0.0em 0.0em 0.15em 0.01em");
+    }
 
-	public Button getButtonFirst() {
-		return buttonFirst;
-	}
+    public Node getUI() {
+        return vBox;
+    }
 
-	public Button getButtonPrev() {
-		return buttonPrev;
-	}
+    public void respondToResize(double w, double h, double controlW, double controlH) {
+        double comboBoxFontHeight = controlH * Constants.FX_COMBOBOX_FONT_SCALE;
+        if (comboBoxFontHeight > Constants.FX_COMBOBOX_FONT_MAX_SIZE) {
+            comboBoxFontHeight = Constants.FX_COMBOBOX_FONT_MAX_SIZE;
+        }
+        double buttonFontSize = controlH * Constants.FX_BUTTONS_FONT_SCALE;
+        if (buttonFontSize > Constants.FX_BUTTONS_FONT_MAX_SIZE) {
+            buttonFontSize = Constants.FX_BUTTONS_FONT_MAX_SIZE;
+        }
+        toolBarTop.setStyle("-fx-font-size: " + buttonFontSize + "pt");
+        toolBarNavigator.setStyle("-fx-font-size: " + buttonFontSize + "pt");
+        comboBoxCurve.setStyle("-fx-font-size: " + comboBoxFontHeight + "pt");
+        toolBarTop.setMaxWidth(vBox.getWidth() * 0.99);
+        toolBarTop.setMaxHeight(controlH);
+        toolBarNavigator.setMaxWidth(vBox.getWidth() * 0.99);
+        toolBarNavigator.setMaxHeight(controlH);
+        comboBoxCurve.setMinWidth(controlW);
+        comboBoxCurve.setMaxWidth(controlW);
+        labelCurve.setFont(new Font(controlH * 0.4));
+        labelCurve.setMinWidth(controlH * 1.3);
+        labelCurve.setMaxWidth(controlH * 1.3);
+    }
 
-	public Button getButtonNext() {
-		return buttonNext;
-	}
+    private void setSpinnersFromCurve() {
+        int[] v = new int[9];
+        curvesPaint.getYvalues(v);
+        for (int i = 0; i < 9; i++) {
+            if (allSpinners.get(i).getValueFactory().getValue() != v[i]) {
+                changedFromSetSpinners[i] = 1;
+                allSpinners.get(i).getValueFactory().setValue(v[i]);
+            }
+        }
+    }
 
-	public Button getButtonLast() {
-		return buttonLast;
-	}
+    public void setYvalues(int[] values, Boolean setFromSysex) {
+        curvesPaint.setYvalues(values, setFromSysex);
+        if (setFromSysex) {
+            setSysexReceived(true);
+            testSyncState();
+        }
+        int[] v;
+        v = new int[9];
+        curvesPaint.getYvalues(v);
+        setSpinnersFromCurve();
+    }
 
-	public ComboBox<String> getComboBoxCurve() {
-		return comboBoxCurve;
-	}
-	
-	public  void testSyncState() {
-		if (sysexReceived) {
-			if (curvesPaint.isInSync()) {
-				setSyncState(Constants.SYNC_STATE_SYNCED);
-			} else {
-				setSyncState(Constants.SYNC_STATE_NOT_SYNCED);
-			}
-		} else {
-			setSyncState(Constants.SYNC_STATE_UNKNOWN);
-		}
-	}
-	
-	public void setSyncState(int state) {
-		syncState = state;
-		Color color;
-		switch (state) {
-		case Constants.SYNC_STATE_UNKNOWN:
-			color = Constants.SYNC_STATE_UNKNOWN_COLOR;
-			break;
-		case Constants.SYNC_STATE_SYNCED:
-			color = Constants.SYNC_STATE_SYNCED_COLOR;
-			break;
-		case Constants.SYNC_STATE_NOT_SYNCED:
-			color = Constants.SYNC_STATE_NOT_SYNCED_COLOR;
-			break;
-		default:
-			color = Constants.SYNC_STATE_SYNCED_COLOR;
-			break;
-		}
-		labelCurve.setTextFill(color);
-	}
+    public void setMdYvalues(int[] values) {
+        curvesPaint.setMdYvalues(values);
+    }
 
-	public void setSysexReceived(Boolean received) {
-		sysexReceived = received;
-	}
+    public void getYvalues(int[] values) {
+        curvesPaint.getYvalues(values);
+    }
+
+    public Button getButtonGet() {
+        return buttonGet;
+    }
+
+    public Button getButtonSend() {
+        return buttonSend;
+    }
+
+    public Button getButtonGetAll() {
+        return buttonGetAll;
+    }
+
+    public Button getButtonSendAll() {
+        return buttonSendAll;
+    }
+
+    public Button getButtonLoad() {
+        return buttonLoad;
+    }
+
+    public Button getButtonSave() {
+        return buttonSave;
+    }
+
+    public Button getButtonFirst() {
+        return buttonFirst;
+    }
+
+    public Button getButtonPrev() {
+        return buttonPrev;
+    }
+
+    public Button getButtonNext() {
+        return buttonNext;
+    }
+
+    public Button getButtonLast() {
+        return buttonLast;
+    }
+
+    public ComboBox<String> getComboBoxCurve() {
+        return comboBoxCurve;
+    }
+
+    public void testSyncState() {
+        if (sysexReceived) {
+            if (curvesPaint.isInSync()) {
+                setSyncState(Constants.SYNC_STATE_SYNCED);
+            } else {
+                setSyncState(Constants.SYNC_STATE_NOT_SYNCED);
+            }
+        } else {
+            setSyncState(Constants.SYNC_STATE_UNKNOWN);
+        }
+    }
+
+    public void setSyncState(int state) {
+        Color color = switch (state) {
+            case Constants.SYNC_STATE_UNKNOWN -> Constants.SYNC_STATE_UNKNOWN_COLOR;
+            case Constants.SYNC_STATE_NOT_SYNCED -> Constants.SYNC_STATE_NOT_SYNCED_COLOR;
+            default -> Constants.SYNC_STATE_SYNCED_COLOR;
+        };
+        labelCurve.setTextFill(color);
+    }
+
+    public void setSysexReceived(Boolean received) {
+        sysexReceived = received;
+    }
 }

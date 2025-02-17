@@ -9,7 +9,7 @@ public class ConfigCurve {
     public int[] yValues = {2, 32, 64, 96, 128, 160, 192, 224, 255};
     public int syncState = Constants.SYNC_STATE_UNKNOWN;
     public boolean sysexReceived = false;
-    private int id;
+    private final int id;
 
     public ConfigCurve(int i) {
         id = i;
@@ -51,7 +51,7 @@ public class ConfigCurve {
             sysex[i++] = sysex_byte[0];
             sysex[i++] = sysex_byte[1];
         }
-        sysex[i++] = Constants.SYSEX_END;
+        sysex[i] = Constants.SYSEX_END;
         return sysex;
     }
 
@@ -68,8 +68,5 @@ public class ConfigCurve {
                 }
             }
         }
-
     }
-
-
 }

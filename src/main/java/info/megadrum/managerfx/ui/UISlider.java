@@ -9,114 +9,72 @@ import javafx.scene.layout.HBox;
 
 
 public class UISlider extends UIControl {
-	private Slider uiSlider;
-	private Integer minValue;
-	private Integer maxValue;
-	private HBox layout;
+    private Slider uiSlider;
 
-	public UISlider(Boolean showCopyButton) {
-		super(showCopyButton);
-		init();
-	}
-	
-	public UISlider(Integer min, Integer max, Integer initial, Boolean showCopyButton) {
-		super(showCopyButton);
-		init(min, max, initial);
-	}
-	
-	public UISlider(String labelText, Boolean showCopyButton) {
-		super(labelText, showCopyButton);
-		init();
-	}
+    public UISlider(String labelText, int min, int max, int initial, boolean showCopyButton) {
+        super(labelText, showCopyButton);
+        init(min, max, initial);
+    }
 
-	public UISlider(String labelText, Integer min, Integer max, Integer initial, Boolean showCopyButton) {
-		super(labelText, showCopyButton);
-		init(min, max, initial);
-	}
+    private void init(int min, int max, int initial) {
+        intValue = initial;
+        valueType = Constants.VALUE_TYPE_INT;
 
-	private void init() {
-		init(0,15,7);
-	}
-	
-	private void init(Integer min, Integer max, Integer initial) {
-		minValue = min;
-		maxValue = max;
-		intValue = initial;
-		valueType = Constants.VALUE_TYPE_INT;
-
-		uiSlider = new Slider(minValue, maxValue, intValue);
-		uiSlider.valueProperty().addListener(new ChangeListener<Number>() {
+        uiSlider = new Slider(min, max, intValue);
+        uiSlider.valueProperty().addListener(new ChangeListener<>() {
             public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
-		    	if (changedFromSet > 0) {
-		    		changedFromSet--;
-		        	//System.out.printf("changedFromSet reduced to %d for %s\n", changedFromSet, label.getText());
-		    	} else {
-		        	//System.out.printf("Setting %s to %s\n", label.getText(), newValue);
-					if (intValue.intValue() != new_val.intValue()) {
-						intValue = new_val.intValue();
-						//System.out.printf("%s: new value = %d, old value = %d\n",label.getText(),Integer.valueOf(newValue),intValue );
-						fireControlChangeEvent(new ControlChangeEvent(this), 0);
-						if (syncState != Constants.SYNC_STATE_UNKNOWN) {
-							if (intValue.intValue() == mdIntValue.intValue()) {
-								setSyncState(Constants.SYNC_STATE_SYNCED);						
-							} else {
-								setSyncState(Constants.SYNC_STATE_NOT_SYNCED);
-							}
-							
-						}
-						//resizeFont();
-					}
-		    	}
+                if (changedFromSet > 0) {
+                    changedFromSet--;
+                } else {
+                    if (intValue != new_val.intValue()) {
+                        intValue = new_val.intValue();
+                        fireControlChangeEvent(new ControlChangeEvent(this), 0);
+                        if (syncState != Constants.SYNC_STATE_UNKNOWN) {
+                            setSyncState((intValue == mdIntValue) ? Constants.SYNC_STATE_SYNCED : Constants.SYNC_STATE_NOT_SYNCED);
+                        }
+                    }
+                }
             }
-		});
-		
-		uiSlider.setShowTickMarks(true);
-		//uiSlider.setSnapToTicks(true);
-		uiSlider.setMajorTickUnit(16f);
-		uiSlider.setBlockIncrement(1.0f);
-		uiSlider.setMinorTickCount(16);
-		
-	    layout = new HBox();
-	    layout.setAlignment(Pos.CENTER_LEFT);
-	    layout.getChildren().addAll(uiSlider);
-		initControl(layout);
-	}
+        });
+
+        uiSlider.setShowTickMarks(true);
+        uiSlider.setMajorTickUnit(16f);
+        uiSlider.setBlockIncrement(1.0f);
+        uiSlider.setMinorTickCount(16);
+
+        HBox layout = new HBox();
+        layout.setAlignment(Pos.CENTER_LEFT);
+        layout.getChildren().addAll(uiSlider);
+        initControl(layout);
+    }
 
     @Override
-    public void respondToResize(Double w, Double h) {
-    	//Double width = (h*3.5 + w*0.1);
-    	Double width = w*0.48;
-    	Double sliderFontSize = h*0.5;
-    	sliderFontSize = (sliderFontSize>8)?8:sliderFontSize;
-    	super.respondToResize(w, h);
-		uiSlider.setMinHeight(h);
-		uiSlider.setMaxHeight(h);
-		uiSlider.setMaxWidth(width);
-		uiSlider.setMinWidth(width);
-		uiSlider.setStyle("-fx-font-size: " + sliderFontSize.toString()+ "pt");				
+    public void respondToResize(double w, double h) {
+        double width = w * 0.48;
+        double sliderFontSize = (h * 0.5 > 8) ? 8 : h * 0.5;
+        super.respondToResize(w, h);
+        uiSlider.setMinHeight(h);
+        uiSlider.setMaxHeight(h);
+        uiSlider.setMaxWidth(width);
+        uiSlider.setMinWidth(width);
+        uiSlider.setStyle("-fx-font-size: " + sliderFontSize + "pt");
     }
-/*
-    @Override
-	public void setControlMinWidth(Double w) {
-    	// don't change spinner control width so override setControlMinWidth here
-	}
-*/
-    public void uiCtlSetValue(Integer n, Boolean setFromSysex) {
-    	if (intValue.intValue() != n.intValue()) {
-        	changedFromSet++;
-    		intValue = n;
-    	}
-    	//System.out.printf("changedFromSet = %d for %s\n", changedFromSet, label.getText());
-    	if (setFromSysex) {
-    		setSyncState(Constants.SYNC_STATE_SYNCED);
-    		mdIntValue = n;
-    	} else {
-        	updateSyncStateConditional();
-    	}
-    	uiSlider.setValue(intValue);
+
+    public void uiCtlSetValue(int n, boolean setFromSysex) {
+        if (intValue != n) {
+            changedFromSet++;
+            intValue = n;
+        }
+        if (setFromSysex) {
+            setSyncState(Constants.SYNC_STATE_SYNCED);
+            mdIntValue = n;
+        } else {
+            updateSyncStateConditional();
+        }
+        uiSlider.setValue(intValue);
     }
-    
-    public Integer uiCtlGetValue() {
-    	return (int)uiSlider.getValue();
+
+    public int uiCtlGetValue() {
+        return (int) uiSlider.getValue();
     }
 }

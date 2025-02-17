@@ -9,32 +9,34 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
 public class UIPadsExtra extends UIPanel implements PanelInterface {
-	private TabPane			tabPane;
-	private Tab 			tabCurves;
-	private	Tab				tabCustomNames;
-	private UICurves		uiCurves;
-	private UICustomNames	uiCustomNames;
+    private final TabPane tabPane;
+    private final Tab tabCurves;
+    private final Tab tabCustomNames;
+    private final UICurves uiCurves;
+    private final UICustomNames uiCustomNames;
 
-	protected EventListenerList listenerList = new EventListenerList();
-	
-	public void addControlChangeEventListener(ControlChangeEventListener listener) {
-		listenerList.add(ControlChangeEventListener.class, listener);
-	}
-	public void removeControlChangeEventListener(ControlChangeEventListener listener) {
-		listenerList.remove(ControlChangeEventListener.class, listener);
-	}
-	protected void fireControlChangeEvent(ControlChangeEvent evt, Integer parameter) {
-		Object[] listeners = listenerList.getListenerList();
-		for (int i = 0; i < listeners.length; i = i+2) {
-			if (listeners[i] == ControlChangeEventListener.class) {
-				((ControlChangeEventListener) listeners[i+1]).controlChangeEventOccurred(evt, parameter);
-			}
-		}
-	}
-	
-	public UIPadsExtra(String title) {
-		super(title, false);
-		tabPane = new TabPane();
+    protected EventListenerList listenerList = new EventListenerList();
+
+    public void addControlChangeEventListener(ControlChangeEventListener listener) {
+        listenerList.add(ControlChangeEventListener.class, listener);
+    }
+
+    public void removeControlChangeEventListener(ControlChangeEventListener listener) {
+        listenerList.remove(ControlChangeEventListener.class, listener);
+    }
+
+    protected void fireControlChangeEvent(ControlChangeEvent evt, int parameter) {
+        Object[] listeners = listenerList.getListenerList();
+        for (int i = 0; i < listeners.length; i = i + 2) {
+            if (listeners[i] == ControlChangeEventListener.class) {
+                ((ControlChangeEventListener) listeners[i + 1]).controlChangeEventOccurred(evt, parameter);
+            }
+        }
+    }
+
+    public UIPadsExtra(String title) {
+        super(title, false);
+        tabPane = new TabPane();
         tabCurves = new Tab("Custom Curves");
         tabCurves.setClosable(false);
         tabCustomNames = new Tab("Custom Names");
@@ -42,161 +44,152 @@ public class UIPadsExtra extends UIPanel implements PanelInterface {
 
         uiCurves = new UICurves();
         uiCurves.addControlChangeEventListener(new ControlChangeEventListener() {
-			
-			@Override
-			public void controlChangeEventOccurred(ControlChangeEvent evt, Integer parameter) {
-				fireControlChangeEvent(new ControlChangeEvent(this), parameter);
-			}
-		});
-        tabCurves.setContent(uiCurves.getUI());        
+            @Override
+            public void controlChangeEventOccurred(ControlChangeEvent evt, int parameter) {
+                fireControlChangeEvent(new ControlChangeEvent(this), parameter);
+            }
+        });
+        tabCurves.setContent(uiCurves.getUI());
         uiCustomNames = new UICustomNames();
         uiCustomNames.addControlChangeEventListener(new ControlChangeEventListener() {
-			
-			@Override
-			public void controlChangeEventOccurred(ControlChangeEvent evt, Integer parameter) {
-				fireControlChangeEvent(new ControlChangeEvent(this), parameter);
-			}
-		});
+            @Override
+            public void controlChangeEventOccurred(ControlChangeEvent evt, int parameter) {
+                fireControlChangeEvent(new ControlChangeEvent(this), parameter);
+            }
+        });
         tabCustomNames.setContent(uiCustomNames.getUI());
-        tabPane.getTabs().addAll(tabCurves,tabCustomNames);
+        tabPane.getTabs().addAll(tabCurves, tabCustomNames);
         vBoxAll.getChildren().add(tabPane);
-		setDetached(false);
-		//vBoxAll.setMaxHeight(440);
-		//vBoxAll.setMaxSize(340, 440);
-		//titledPane.setMaxSize(300, 500);
-	}
+        setDetached(false);
+    }
 
-	public void respondToResizeDetached() {
-		Double w = windowDetached.getScene().getWidth();
-		Double h = windowDetached.getScene().getHeight();
-		Double controlW = w*0.5;
-		Double controlH = h*0.05;
-		
-		respondToResize(w, h + controlH, controlW, controlH);
-	}
+    public void respondToResizeDetached() {
+        double w = windowDetached.getScene().getWidth();
+        double h = windowDetached.getScene().getHeight();
+        double controlW = w * 0.5;
+        double controlH = h * 0.05;
 
-	public void respondToResize (Double w, Double h, Double cW, Double cH) {
-		super.respondToResize(w, h, cW, cH);
-		if (detached) {
-			vBoxAll.setMaxWidth(w);
-			titledPane.setWidth(w);
-		} else {
-			vBoxAll.setMaxWidth(340);
-			vBoxAll.setMinWidth(340);
-			titledPane.setWidth(340.0);
-		}
-		tabCurves.setStyle("-fx-font-size: " + tabsFontSize.toString() + "pt");
-		tabCustomNames.setStyle("-fx-font-size: " + tabsFontSize.toString() + "pt");
-		tabPane.setStyle("-fx-padding: " + tabHeaderPadding.toString() + "em 0.0em 0.0em 0.0em; -fx-tab-max-height:" + tabHeaderHeight.toString() + "pt;-fx-tab-min-height:" + tabHeaderHeight.toString() + "pt;");
+        respondToResize(w, h + controlH, controlW, controlH);
+    }
 
-		vBoxAll.setMinHeight(h - controlH*1.02);
-		vBoxAll.setMaxHeight(h - controlH*1.02);
-		uiCurves.respondToResize(w, h, 340*0.4, controlH);
-		uiCustomNames.respondToResize(w, h, 340*0.4, controlH);
-	}
-	
-	public void setAllCustomNamesStatesUnknown() {
-		uiCustomNames.setAllStateUnknown();
-	}
-	
-	public void setCustomName(ConfigCustomName config, int id, Boolean setFromSysex) {
-		uiCustomNames.setCustomName(config, id, setFromSysex);
-	}
-	
-	public void getCustomName(ConfigCustomName config, int id) {
-		uiCustomNames.getCustomName(config, id);
-	}
-	
-	public void setMdCustomName(ConfigCustomName config, int id) {
-		uiCustomNames.setMdCustomName(config, id);
-	}
+    public void respondToResize(double w, double h, double cW, double cH) {
+        super.respondToResize(w, h, cW, cH);
+        if (detached) {
+            vBoxAll.setMaxWidth(w);
+            titledPane.setWidth(w);
+        } else {
+            vBoxAll.setMaxWidth(340);
+            vBoxAll.setMinWidth(340);
+            titledPane.setWidth(340.0);
+        }
+        tabCurves.setStyle("-fx-font-size: " + tabsFontSize + "pt");
+        tabCustomNames.setStyle("-fx-font-size: " + tabsFontSize + "pt");
+        tabPane.setStyle("-fx-padding: " + tabHeaderPadding + "em 0.0em 0.0em 0.0em; -fx-tab-max-height:" + tabHeaderHeight + "pt;-fx-tab-min-height:" + tabHeaderHeight + "pt;");
 
-	public Button getCustomNamesButtonGetAll() {
-		return uiCustomNames.getButtonGetAll();
-	}
+        vBoxAll.setMinHeight(h - controlH * 1.02);
+        vBoxAll.setMaxHeight(h - controlH * 1.02);
+        uiCurves.respondToResize(w, h, 340 * 0.4, controlH);
+        uiCustomNames.respondToResize(w, h, 340 * 0.4, controlH);
+    }
 
-	public Button getCustomNamesButtonSendAll() {
-		return uiCustomNames.getButtonSendAll();
-	}
+    public void setAllCustomNamesStatesUnknown() {
+        uiCustomNames.setAllStateUnknown();
+    }
 
-	public Button getCustomNamesButtonLoadAll() {
-		return uiCustomNames.getButtonLoadAll();
-	}
+    public void setCustomName(ConfigCustomName config, int id, boolean setFromSysex) {
+        uiCustomNames.setCustomName(config, id, setFromSysex);
+    }
 
-	public Button getCustomNamesButtonSaveAll() {
-		return uiCustomNames.getButtonSaveAll();
-	}
+    public void getCustomName(ConfigCustomName config, int id) {
+        uiCustomNames.getCustomName(config, id);
+    }
 
-	public ComboBox<String> getComboBoxCustomNamesCount() {
-		return uiCustomNames.getComboBoxCustomNamesCount();
-	}
-	
-	public void setYvalues(int [] values, Boolean setFromSysex) {
-		uiCurves.setYvalues(values, setFromSysex);
-	}
+    public Button getCustomNamesButtonGetAll() {
+        return uiCustomNames.getButtonGetAll();
+    }
 
-	public void setMdYvalues(int [] values) {
-		uiCurves.setMdYvalues(values);
-	}
+    public Button getCustomNamesButtonSendAll() {
+        return uiCustomNames.getButtonSendAll();
+    }
 
-	public void getYvalues(int [] values) {
-		uiCurves.getYvalues(values);
-	}
-	
-	public void setCurveSysexReceived(Boolean received) {
-		uiCurves.setSysexReceived(received);
-	}
-	
-	public void testCurveSyncState() {
-		uiCurves.testSyncState();
-	}
+    public Button getCustomNamesButtonLoadAll() {
+        return uiCustomNames.getButtonLoadAll();
+    }
 
-	public Button getCurvesButtonGet() {
-		return uiCurves.getButtonGet();
-	}
+    public Button getCustomNamesButtonSaveAll() {
+        return uiCustomNames.getButtonSaveAll();
+    }
 
-	public Button getCurvesButtonSend() {
-		return uiCurves.getButtonSend();
-	}
+    public ComboBox<String> getComboBoxCustomNamesCount() {
+        return uiCustomNames.getComboBoxCustomNamesCount();
+    }
 
-	public Button getCurvesButtonGetAll() {
-		return uiCurves.getButtonGetAll();
-	}
+    public void setYvalues(int[] values, boolean setFromSysex) {
+        uiCurves.setYvalues(values, setFromSysex);
+    }
 
-	public Button getCurvesButtonSendAll() {
-		return uiCurves.getButtonSendAll();
-	}
+    public void setMdYvalues(int[] values) {
+        uiCurves.setMdYvalues(values);
+    }
 
-	public Button getCurvesButtonLoad() {
-		return uiCurves.getButtonLoad();
-	}
+    public void getYvalues(int[] values) {
+        uiCurves.getYvalues(values);
+    }
 
-	public Button getCurvesButtonSave() {
-		return uiCurves.getButtonSave();
-	}
+    public void setCurveSysexReceived(boolean received) {
+        uiCurves.setSysexReceived(received);
+    }
 
-	public ComboBox<String> getCurvesComboBox() {
-		return uiCurves.getComboBoxCurve();
-	}
-	
-	public Button getCurvesButtonFirst() {
-		return uiCurves.getButtonFirst();
-	}
+    public void testCurveSyncState() {
+        uiCurves.testSyncState();
+    }
 
-	public Button getCurvesButtonPrev() {
-		return uiCurves.getButtonPrev();
-	}
+    public Button getCurvesButtonGet() {
+        return uiCurves.getButtonGet();
+    }
 
-	public Button getCurvesButtonNext() {
-		return uiCurves.getButtonNext();
-	}
+    public Button getCurvesButtonSend() {
+        return uiCurves.getButtonSend();
+    }
 
-	public Button getCurvesButtonLast() {
-		return uiCurves.getButtonLast();
-	}
+    public Button getCurvesButtonGetAll() {
+        return uiCurves.getButtonGetAll();
+    }
 
-	@Override
-	public int getVerticalControlsCount() {
-		return 22;
-	}
+    public Button getCurvesButtonSendAll() {
+        return uiCurves.getButtonSendAll();
+    }
+
+    public Button getCurvesButtonLoad() {
+        return uiCurves.getButtonLoad();
+    }
+
+    public Button getCurvesButtonSave() {
+        return uiCurves.getButtonSave();
+    }
+
+    public ComboBox<String> getCurvesComboBox() {
+        return uiCurves.getComboBoxCurve();
+    }
+
+    public Button getCurvesButtonFirst() {
+        return uiCurves.getButtonFirst();
+    }
+
+    public Button getCurvesButtonPrev() {
+        return uiCurves.getButtonPrev();
+    }
+
+    public Button getCurvesButtonNext() {
+        return uiCurves.getButtonNext();
+    }
+
+    public Button getCurvesButtonLast() {
+        return uiCurves.getButtonLast();
+    }
+
+    @Override
+    public int getVerticalControlsCount() {
+        return 22;
+    }
 }

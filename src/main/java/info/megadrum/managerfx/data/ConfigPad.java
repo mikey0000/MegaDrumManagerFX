@@ -37,76 +37,76 @@ public class ConfigPad {
     public int syncState = Constants.SYNC_STATE_UNKNOWN;
     public boolean sysexReceived = false;
 
-    private int id;
+    private final int id;
 
-    public ConfigPad (int i) {
+    public ConfigPad(int i) {
         id = i;
     }
 
     public void copyToPropertiesConfiguration(PropertiesConfiguration prop, PropertiesConfigurationLayout layout, String prefix, int id) {
         id++;
-        prefix = prefix+"["+id+"].";
-        layout.setComment(prefix+"note", "\n#Input "+id+" settings");
-        prop.setProperty(prefix+"disabled", disabled);
-        prop.setProperty(prefix+"note", note);
-        prop.setProperty(prefix+"channel", channel);
-        prop.setProperty(prefix+"curve", curve);
-        prop.setProperty(prefix+"threshold", threshold);
-        prop.setProperty(prefix+"retrigger", retrigger);
-        prop.setProperty(prefix+"levelMax", levelMax);
-        prop.setProperty(prefix+"minScan", minScan);
-        prop.setProperty(prefix+"type", type);
-        prop.setProperty(prefix+"autoLevel", autoLevel);
-        prop.setProperty(prefix+"dual", dual);
-        prop.setProperty(prefix+"threeWay", threeWay);
-        prop.setProperty(prefix+"function", function);
-        prop.setProperty(prefix+"gain", gain);
-        prop.setProperty(prefix+"xtalkLevel", xtalkLevel);
-        prop.setProperty(prefix+"xtalkGroup", xtalkGroup);
-        prop.setProperty(prefix+"dynTime", dynTime);
-        prop.setProperty(prefix+"dynLevel", dynLevel);
-        prop.setProperty(prefix+"compression", compression);
-        prop.setProperty(prefix+"shift", shift);
-        prop.setProperty(prefix+"name", name);
-        prop.setProperty(prefix+"altNote", altNote);
-        prop.setProperty(prefix+"pressrollNote", pressrollNote);
-        prop.setProperty(prefix+"rollSmoothLevel", rollSmoothLevel);
-        prop.setProperty(prefix+"extraFalseSupp", extraFalseSupp);
-        prop.setProperty(prefix+"altNote_linked", altNote_linked);
-        prop.setProperty(prefix+"pressrollNote_linked", pressrollNote_linked);
+        prefix = prefix + "[" + id + "].";
+        layout.setComment(prefix + "note", "\n#Input " + id + " settings");
+        prop.setProperty(prefix + "disabled", disabled);
+        prop.setProperty(prefix + "note", note);
+        prop.setProperty(prefix + "channel", channel);
+        prop.setProperty(prefix + "curve", curve);
+        prop.setProperty(prefix + "threshold", threshold);
+        prop.setProperty(prefix + "retrigger", retrigger);
+        prop.setProperty(prefix + "levelMax", levelMax);
+        prop.setProperty(prefix + "minScan", minScan);
+        prop.setProperty(prefix + "type", type);
+        prop.setProperty(prefix + "autoLevel", autoLevel);
+        prop.setProperty(prefix + "dual", dual);
+        prop.setProperty(prefix + "threeWay", threeWay);
+        prop.setProperty(prefix + "function", function);
+        prop.setProperty(prefix + "gain", gain);
+        prop.setProperty(prefix + "xtalkLevel", xtalkLevel);
+        prop.setProperty(prefix + "xtalkGroup", xtalkGroup);
+        prop.setProperty(prefix + "dynTime", dynTime);
+        prop.setProperty(prefix + "dynLevel", dynLevel);
+        prop.setProperty(prefix + "compression", compression);
+        prop.setProperty(prefix + "shift", shift);
+        prop.setProperty(prefix + "name", name);
+        prop.setProperty(prefix + "altNote", altNote);
+        prop.setProperty(prefix + "pressrollNote", pressrollNote);
+        prop.setProperty(prefix + "rollSmoothLevel", rollSmoothLevel);
+        prop.setProperty(prefix + "extraFalseSupp", extraFalseSupp);
+        prop.setProperty(prefix + "altNote_linked", altNote_linked);
+        prop.setProperty(prefix + "pressrollNote_linked", pressrollNote_linked);
     }
 
     public void copyFromPropertiesConfiguration(PropertiesConfiguration prop, String prefix, int id) {
         id++;
-        prefix = prefix+"["+id+"].";
-        disabled = prop.getBoolean(prefix+"disabled", disabled);
-        note = Utils.validateInt(prop.getInt(prefix+"note", note),0,127,note);
-        channel = Utils.validateInt(prop.getInt(prefix+"channel", channel),0,15,channel);
-        curve = Utils.validateInt(prop.getInt(prefix+"curve", curve),0,15,curve);
-        threshold = Utils.validateInt(prop.getInt(prefix+"threshold", threshold),0,127,threshold);
-        retrigger = Utils.validateInt(prop.getInt(prefix+"retrigger", retrigger),0,127,retrigger);
+        prefix = prefix + "[" + id + "].";
+        disabled = prop.getBoolean(prefix + "disabled", disabled);
+        note = Utils.validateInt(prop.getInt(prefix + "note", note), 0, 127, note);
+        channel = Utils.validateInt(prop.getInt(prefix + "channel", channel), 0, 15, channel);
+        curve = Utils.validateInt(prop.getInt(prefix + "curve", curve), 0, 15, curve);
+        threshold = Utils.validateInt(prop.getInt(prefix + "threshold", threshold), 0, 127, threshold);
+        retrigger = Utils.validateInt(prop.getInt(prefix + "retrigger", retrigger), 0, 127, retrigger);
         if (retrigger < 1) retrigger = 1;
-        levelMax = Utils.validateInt(prop.getInt(prefix+"levelMax", levelMax),64,1023,levelMax);
-        minScan = Utils.validateInt(prop.getInt(prefix+"minScan", minScan),10,100,minScan);
-        type = prop.getBoolean(prefix+"type", type);
-        autoLevel = prop.getBoolean(prefix+"autoLevel", autoLevel);
-        dual = prop.getBoolean(prefix+"dual", dual);
-        threeWay = prop.getBoolean(prefix+"threeWay", threeWay);
-        function = Utils.validateInt(prop.getInt(prefix+"function", function),0,2,function);
-        gain = Utils.validateInt(prop.getInt(prefix+"gain", gain),0,8,gain);
-        xtalkLevel = Utils.validateInt(prop.getInt(prefix+"xtalkLevel", xtalkLevel),0,7,xtalkLevel);
-        xtalkGroup = Utils.validateInt(prop.getInt(prefix+"xtalkGroup", xtalkGroup),0,7,xtalkGroup);
-        dynTime = Utils.validateInt(prop.getInt(prefix+"dynTime", dynTime),0,15,dynTime);
-        dynLevel = Utils.validateInt(prop.getInt(prefix+"dynLevel", dynLevel),0,15,dynLevel);
-        compression = Utils.validateInt(prop.getInt(prefix+"compression", compression),0,7,compression);
-        shift = Utils.validateInt(prop.getInt(prefix+"shift", shift),0,7,shift);
-        name = Utils.validateInt(prop.getInt(prefix+"name", name),0,127,name);
-        altNote = Utils.validateInt(prop.getInt(prefix+"altNote", altNote),0,127,altNote);
-        pressrollNote = Utils.validateInt(prop.getInt(prefix+"pressrollNote", pressrollNote),0,127,pressrollNote);
-        rollSmoothLevel = Utils.validateInt(prop.getInt(prefix+"rollSmoothLevel", rollSmoothLevel),0,3,rollSmoothLevel);
-        extraFalseSupp = prop.getBoolean(prefix+"extraFalseSupp", extraFalseSupp);
-        altNote_linked = prop.getBoolean(prefix+"altNote_linked", altNote_linked);
-        pressrollNote_linked = prop.getBoolean(prefix+"pressrollNote_linked", pressrollNote_linked);
+        levelMax = Utils.validateInt(prop.getInt(prefix + "levelMax", levelMax), 64, 1023, levelMax);
+        minScan = Utils.validateInt(prop.getInt(prefix + "minScan", minScan), 10, 100, minScan);
+        type = prop.getBoolean(prefix + "type", type);
+        autoLevel = prop.getBoolean(prefix + "autoLevel", autoLevel);
+        dual = prop.getBoolean(prefix + "dual", dual);
+        threeWay = prop.getBoolean(prefix + "threeWay", threeWay);
+        function = Utils.validateInt(prop.getInt(prefix + "function", function), 0, 2, function);
+        gain = Utils.validateInt(prop.getInt(prefix + "gain", gain), 0, 8, gain);
+        xtalkLevel = Utils.validateInt(prop.getInt(prefix + "xtalkLevel", xtalkLevel), 0, 7, xtalkLevel);
+        xtalkGroup = Utils.validateInt(prop.getInt(prefix + "xtalkGroup", xtalkGroup), 0, 7, xtalkGroup);
+        dynTime = Utils.validateInt(prop.getInt(prefix + "dynTime", dynTime), 0, 15, dynTime);
+        dynLevel = Utils.validateInt(prop.getInt(prefix + "dynLevel", dynLevel), 0, 15, dynLevel);
+        compression = Utils.validateInt(prop.getInt(prefix + "compression", compression), 0, 7, compression);
+        shift = Utils.validateInt(prop.getInt(prefix + "shift", shift), 0, 7, shift);
+        name = Utils.validateInt(prop.getInt(prefix + "name", name), 0, 127, name);
+        altNote = Utils.validateInt(prop.getInt(prefix + "altNote", altNote), 0, 127, altNote);
+        pressrollNote = Utils.validateInt(prop.getInt(prefix + "pressrollNote", pressrollNote), 0, 127, pressrollNote);
+        rollSmoothLevel = Utils.validateInt(prop.getInt(prefix + "rollSmoothLevel", rollSmoothLevel), 0, 3, rollSmoothLevel);
+        extraFalseSupp = prop.getBoolean(prefix + "extraFalseSupp", extraFalseSupp);
+        altNote_linked = prop.getBoolean(prefix + "altNote_linked", altNote_linked);
+        pressrollNote_linked = prop.getBoolean(prefix + "pressrollNote_linked", pressrollNote_linked);
     }
 
     public void setTypeInt(int typeInt) {
@@ -116,29 +116,19 @@ public class ConfigPad {
                 case 1:
                     dual = true;
                     threeWay = false;
-                    //System.out.println("Set Dual");
                     break;
                 case 2:
                     dual = false;
                     threeWay = true;
-                    //System.out.println("Set 3way");
                     break;
                 default:
                     dual = false;
                     threeWay = false;
-                    //System.out.println("Set Single");
                     break;
             }
         } else {
-            if (typeInt == 0) {
-                type = false;
-                //System.out.println("Set Piezo");
-            } else {
-                type = true;
-                //System.out.println("Set Switch");
-            }
+            type = typeInt != 0;
         }
-
     }
 
     public int getTypeInt() {
@@ -146,22 +136,11 @@ public class ConfigPad {
         if (leftInput) {
             if (dual) {
                 result = 1;
-                //System.out.println("Get Dual");
             } else if (threeWay) {
                 result = 2;
-                //System.out.println("Get 3way");
-            } else {
-                result = 0;
-                //System.out.println("Get Single");
             }
-        } else {
-            if (type) {
-                result = 1;
-                //System.out.println("Get Piezo");
-            } else {
-                result = 0;
-                //System.out.println("Get Switch");
-            }
+        } else if (type) {
+            result = 1;
         }
         return result;
     }
@@ -246,7 +225,7 @@ public class ConfigPad {
         int value = -1;
         switch (valueId) {
             case Constants.INPUT_VALUE_ID_DISABLED:
-                value = disabled?1:0;
+                value = disabled ? 1 : 0;
                 break;
             case Constants.INPUT_VALUE_ID_NAME:
                 value = name;
@@ -288,7 +267,7 @@ public class ConfigPad {
                 value = gain;
                 break;
             case Constants.INPUT_VALUE_ID_HIGHLEVEL_AUTO:
-                value = autoLevel?1:0;
+                value = autoLevel ? 1 : 0;
                 break;
             case Constants.INPUT_VALUE_ID_HIGHLEVEL:
                 value = levelMax;
@@ -312,7 +291,7 @@ public class ConfigPad {
                 value = rollSmoothLevel;
                 break;
             case Constants.INPUT_VALUE_ID_EXTRA_FALSE:
-                value = extraFalseSupp?1:0;
+                value = extraFalseSupp ? 1 : 0;
                 break;
             default:
                 break;
@@ -321,92 +300,88 @@ public class ConfigPad {
     }
 
     public byte[] getSysexFromConfig() {
-        byte [] sysex_byte = new byte[2];
-        byte [] sysex_short = new byte[4];
-        byte [] sysex = new byte[Constants.MD_SYSEX_PAD_SIZE];
-        byte flags;
+        byte[] sysex = new byte[Constants.MD_SYSEX_PAD_SIZE];
         int i = 0;
 
         sysex[i++] = Constants.SYSEX_START;
         sysex[i++] = Constants.MD_SYSEX;
-        sysex[i++] = 0; //(byte)chainId;
+        sysex[i++] = 0;
         sysex[i++] = Constants.MD_SYSEX_PAD;
-        sysex[i++] = (byte)(id + 1);
+        sysex[i++] = (byte) (id + 1);
 
-        sysex_byte = Utils.byte2sysex((byte)(note|(disabled?0x80:0)));
+        byte[] sysex_byte = Utils.byte2sysex((byte) (note | (disabled ? 0x80 : 0)));
         sysex[i++] = sysex_byte[0];
         sysex[i++] = sysex_byte[1];
-        sysex_byte = Utils.byte2sysex((byte)((channel<<4)|(curve)));
+        sysex_byte = Utils.byte2sysex((byte) ((channel << 4) | (curve)));
         sysex[i++] = sysex_byte[0];
         sysex[i++] = sysex_byte[1];
-        sysex_byte = Utils.byte2sysex((byte)threshold);
+        sysex_byte = Utils.byte2sysex((byte) threshold);
         sysex[i++] = sysex_byte[0];
         sysex[i++] = sysex_byte[1];
-        sysex_byte = Utils.byte2sysex((byte)retrigger);
+        sysex_byte = Utils.byte2sysex((byte) retrigger);
         sysex[i++] = sysex_byte[0];
         sysex[i++] = sysex_byte[1];
-        sysex_short = Utils.short2sysex((short)levelMax);
+        byte[] sysex_short = Utils.short2sysex((short) levelMax);
         sysex[i++] = sysex_short[0];
         sysex[i++] = sysex_short[1];
         sysex[i++] = sysex_short[2];
         sysex[i++] = sysex_short[3];
-        sysex_byte = Utils.byte2sysex((byte)minScan);
+        sysex_byte = Utils.byte2sysex((byte) minScan);
         sysex[i++] = sysex_byte[0];
         sysex[i++] = sysex_byte[1];
-        flags = (byte) (((type)?1:0)|(((autoLevel)?1:0)<<1)|(((dual)?1:0)<<2)|(((threeWay)?1:0)<<3)
-                |(gain<<4));
+        byte flags = (byte) (((type) ? 1 : 0) | (((autoLevel) ? 1 : 0) << 1) | (((dual) ? 1 : 0) << 2) | (((threeWay) ? 1 : 0) << 3)
+                | (gain << 4));
         sysex_byte = Utils.byte2sysex(flags);
         sysex[i++] = sysex_byte[0];
         sysex[i++] = sysex_byte[1];
-        sysex_byte = Utils.byte2sysex((byte)((xtalkGroup<<3)|(xtalkLevel)));
+        sysex_byte = Utils.byte2sysex((byte) ((xtalkGroup << 3) | (xtalkLevel)));
         sysex[i++] = sysex_byte[0];
         sysex[i++] = sysex_byte[1];
-        sysex_byte = Utils.byte2sysex((byte)((dynLevel<<4)|(dynTime)));
+        sysex_byte = Utils.byte2sysex((byte) ((dynLevel << 4) | (dynTime)));
         sysex[i++] = sysex_byte[0];
         sysex[i++] = sysex_byte[1];
-        sysex_byte = Utils.byte2sysex((byte)(((function)<<6)|(shift<<3)|(compression)));
+        sysex_byte = Utils.byte2sysex((byte) (((function) << 6) | (shift << 3) | (compression)));
         sysex[i++] = sysex_byte[0];
         sysex[i++] = sysex_byte[1];
-        sysex_byte = Utils.byte2sysex((byte)name);
+        sysex_byte = Utils.byte2sysex((byte) name);
         sysex[i++] = sysex_byte[0];
         sysex[i++] = sysex_byte[1];
-        flags = (byte) (((extraFalseSupp)?1:0)|(rollSmoothLevel<<1));
+        flags = (byte) (((extraFalseSupp) ? 1 : 0) | (rollSmoothLevel << 1));
         sysex_byte = Utils.byte2sysex(flags);
         sysex[i++] = sysex_byte[0];
         sysex[i++] = sysex_byte[1];
-        sysex_byte = Utils.byte2sysex((byte)pressrollNote);
+        sysex_byte = Utils.byte2sysex((byte) pressrollNote);
         sysex[i++] = sysex_byte[0];
         sysex[i++] = sysex_byte[1];
-        sysex_byte = Utils.byte2sysex((byte)altNote);
+        sysex_byte = Utils.byte2sysex((byte) altNote);
         sysex[i++] = sysex_byte[0];
         sysex[i++] = sysex_byte[1];
         sysex[i++] = Constants.SYSEX_END;
         return sysex;
     }
 
-    public void setConfigFromSysex(byte [] sysex) {
-        byte [] sysex_byte = new byte[2];
-        byte [] sysex_short = new byte[4];
-        byte flags;
+    public void setConfigFromSysex(byte[] sysex) {
+        byte[] sysex_byte = new byte[2];
+        byte[] sysex_short = new byte[4];
         int i = 5;
 
         if (sysex.length >= Constants.MD_SYSEX_PAD_SIZE) {
             sysex_byte[0] = sysex[i++];
             sysex_byte[1] = sysex[i++];
-            disabled = ((Utils.sysex2byte(sysex_byte)&0x80)>0);
-            note = (Utils.sysex2byte(sysex_byte)&0x7f);
+            disabled = ((Utils.sysex2byte(sysex_byte) & 0x80) > 0);
+            note = (Utils.sysex2byte(sysex_byte) & 0x7f);
             sysex_byte[0] = sysex[i++];
             sysex_byte[1] = sysex[i++];
-            flags = Utils.sysex2byte(sysex_byte);
-            curve = (flags&0x0f);
-            channel = ((flags&0xf0)>>4);
+            byte flags = Utils.sysex2byte(sysex_byte);
+            curve = (flags & 0x0f);
+            channel = ((flags & 0xf0) >> 4);
             sysex_byte[0] = sysex[i++];
             sysex_byte[1] = sysex[i++];
             threshold = Utils.sysex2byte(sysex_byte);
             sysex_byte[0] = sysex[i++];
             sysex_byte[1] = sysex[i++];
             retrigger = Utils.sysex2byte(sysex_byte);
-            if (retrigger <1 ) retrigger = 1;
+            if (retrigger < 1) retrigger = 1;
             sysex_short[0] = sysex[i++];
             sysex_short[1] = sysex[i++];
             sysex_short[2] = sysex[i++];
@@ -418,35 +393,35 @@ public class ConfigPad {
             sysex_byte[0] = sysex[i++];
             sysex_byte[1] = sysex[i++];
             flags = Utils.sysex2byte(sysex_byte);
-            gain = ((flags&0xf0)>>4);
-            type = ((flags&1) != 0);
-            autoLevel = ((flags&(1<<1)) != 0);
-            dual = ((flags&(1<<2)) != 0);
-            threeWay = ((flags&(1<<3)) != 0);
+            gain = ((flags & 0xf0) >> 4);
+            type = ((flags & 1) != 0);
+            autoLevel = ((flags & (1 << 1)) != 0);
+            dual = ((flags & (1 << 2)) != 0);
+            threeWay = ((flags & (1 << 3)) != 0);
             sysex_byte[0] = sysex[i++];
             sysex_byte[1] = sysex[i++];
             flags = Utils.sysex2byte(sysex_byte);
-            xtalkGroup = ((flags&0x38)>>3);
-            xtalkLevel = (flags&0x07);
+            xtalkGroup = ((flags & 0x38) >> 3);
+            xtalkLevel = (flags & 0x07);
             sysex_byte[0] = sysex[i++];
             sysex_byte[1] = sysex[i++];
             flags = Utils.sysex2byte(sysex_byte);
-            dynTime = (flags&0x0f);
-            dynLevel = ((flags&0xf0)>>4);
+            dynTime = (flags & 0x0f);
+            dynLevel = ((flags & 0xf0) >> 4);
             sysex_byte[0] = sysex[i++];
             sysex_byte[1] = sysex[i++];
             flags = Utils.sysex2byte(sysex_byte);
-            shift = ((flags&0x38)>>3);
-            compression = (flags&0x07);
-            function = ((flags&0xc0)>>6);
+            shift = ((flags & 0x38) >> 3);
+            compression = (flags & 0x07);
+            function = ((flags & 0xc0) >> 6);
             sysex_byte[0] = sysex[i++];
             sysex_byte[1] = sysex[i++];
             name = Utils.sysex2byte(sysex_byte);
             sysex_byte[0] = sysex[i++];
             sysex_byte[1] = sysex[i++];
             flags = Utils.sysex2byte(sysex_byte);
-            extraFalseSupp = ((flags&0x01) != 0);
-            rollSmoothLevel = ((flags&0x06)>>1);
+            extraFalseSupp = ((flags & 0x01) != 0);
+            rollSmoothLevel = ((flags & 0x06) >> 1);
             sysex_byte[0] = sysex[i++];
             sysex_byte[1] = sysex[i++];
             pressrollNote = Utils.sysex2byte(sysex_byte);
@@ -459,5 +434,4 @@ public class ConfigPad {
     public void setLeftRight(boolean left) {
         leftInput = left;
     }
-
 }

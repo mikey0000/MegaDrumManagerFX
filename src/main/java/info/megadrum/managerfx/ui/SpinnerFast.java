@@ -35,13 +35,13 @@ public class SpinnerFast<T> extends Spinner<T> {
 	    
 	}
 
-    class IncrementHandler implements EventHandler<MouseEvent> {
+    static class IncrementHandler implements EventHandler<MouseEvent> {
 
         private Spinner<?> spinner;
         private boolean increment;
         private long startTimestamp;
 
-        private static final long DELAY = 1000l * 1000L * 750L; // 0.75 sec
+        private static final long DELAY = 1000L * 1000L * 750L;
         private Node button;
 
         private final AnimationTimer timer = new AnimationTimer() {

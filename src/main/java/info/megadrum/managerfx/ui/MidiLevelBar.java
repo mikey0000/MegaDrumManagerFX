@@ -8,25 +8,21 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class MidiLevelBar extends VBox {
-	private Canvas canvas;
-	private GraphicsContext gc;
-	final static public int barTypeUnknown = 0;
+    final static public int barTypeUnknown = 0;
 	final static public int barTypeHead = barTypeUnknown + 1;
 	final static public int barTypeRim = barTypeHead + 1;
 	final static public int barType3rd = barTypeRim + 1;
 	final static public int barTypeChokeOn = barType3rd + 1;
 	final static public int barTypeChokeOff = barTypeChokeOn + 1;
 	final static public int barTypeHiHat = barTypeChokeOff + 1;
-	private Double barHeightRatio = 0.9;
-	private Double barHeightPadRatio = (1-barHeightRatio)*0.5;
-	final private Double barWidthRatio = 0.9;
+    final private Double barWidthRatio = 0.9;
 	final private Double barWidthPadRatio =  (1-barWidthRatio)*0.5;
 	
 	private int barType = barTypeUnknown;
 	final static public Color [] barColors = {Color.YELLOW, Color.BLUE, Color.GREEN, Color.ORANGE, Color.DARKGREY, Color.LIGHTGREY, Color.BROWN};
-	private Color bgColor = Color.LIGHTGREY;
-	private Color bgBarColor = Color.WHITE;
-	private Color fontColor = Color.BLACK;
+	private final Color bgColor = Color.LIGHTGREY;
+	private final Color bgBarColor = Color.WHITE;
+	private final Color fontColor = Color.BLACK;
 	private Double barWidth = 16.0;
 	private Double barHeight = 300.0;
 	private Double fontSize = 6.0;
@@ -56,22 +52,22 @@ public class MidiLevelBar extends VBox {
 	}
 	
 	private void rePaint() {
-		canvas = new Canvas(barWidth, barHeight);
+        Canvas canvas = new Canvas(barWidth, barHeight);
 		setMinSize(barWidth, barHeight);
 		setMaxSize(barWidth, barHeight);
 		getChildren().clear();
 		getChildren().add(canvas);
-		gc = canvas.getGraphicsContext2D();
+        GraphicsContext gc = canvas.getGraphicsContext2D();
 
-		barHeightRatio = (barHeight>300)?0.95:0.9;
-		barHeightPadRatio = (1-barHeightRatio)*0.5;
-		Double barPadHeight = barHeight*barHeightPadRatio;
+        Double barHeightRatio = (barHeight > 300) ? 0.95 : 0.9;
+        Double barHeightPadRatio = (1 - barHeightRatio) * 0.5;
+		Double barPadHeight = barHeight* barHeightPadRatio;
 
 		gc.setFill(bgColor);
 		gc.fillRect(0 + barWidth*barWidthPadRatio , 0, barWidth*barWidthRatio, barHeight);
 		gc.setFill(bgBarColor);
-		gc.fillRect(0 + barWidth*barWidthPadRatio, barHeight - barHeight*barHeightRatio - barPadHeight , barWidth*barWidthRatio, barHeight*barHeightRatio);
-		Double barFillHeight = ((barHeight*barHeightRatio)*barLevel)/127;
+		gc.fillRect(0 + barWidth*barWidthPadRatio, barHeight - barHeight* barHeightRatio - barPadHeight , barWidth*barWidthRatio, barHeight* barHeightRatio);
+		Double barFillHeight = ((barHeight* barHeightRatio)*barLevel)/127;
 		gc.setFill(barColors[barType]);
 		gc.fillRect(0 + barWidth*barWidthPadRatio, barHeight - barFillHeight - barPadHeight , barWidth*barWidthRatio, barFillHeight);
 
@@ -79,11 +75,11 @@ public class MidiLevelBar extends VBox {
 		fontSize = (fontSize>16.0)?16.0:fontSize;
 		fontSize = (fontSize>barPadHeight)?barPadHeight:fontSize;
 		Font font = new Font(fontSize);
-		Double textX, textW, textY;
+		double textX, textW, textY;
 		gc.setFont(font);
 		textW = getTextWidth(font, barLevel.toString());
 		textX = (barWidth - textW)*0.5;
-		textY = barHeight - barHeight*barHeightPadRatio - barHeight*barHeightRatio*0.5;
+		textY = barHeight - barHeight* barHeightPadRatio - barHeight* barHeightRatio *0.5;
 		gc.setFill(fontColor);
 		gc.fillText(barLevel.toString(), textX, textY);
 
@@ -91,12 +87,12 @@ public class MidiLevelBar extends VBox {
 			String hhText = "Open";
 			textW = getTextWidth(font, hhText);
 			textX = (barWidth - textW)*0.5;
-			textY = barHeight*barHeightPadRatio*0.5 + fontSize*0.3;
+			textY = barHeight* barHeightPadRatio *0.5 + fontSize*0.3;
 			gc.fillText(hhText, textX, textY);
 			hhText = "Clsd";
 			textW = getTextWidth(font, hhText);
 			textX = (barWidth - textW)*0.5;
-			textY = barHeight - barHeight*barHeightPadRatio*0.5 + fontSize*0.3;
+			textY = barHeight - barHeight* barHeightPadRatio *0.5 + fontSize*0.3;
 			gc.fillText(hhText, textX, textY);
 		} else {
 			String msText = barInterval.toString();
@@ -105,11 +101,11 @@ public class MidiLevelBar extends VBox {
 			}
 			textW = getTextWidth(font, msText);
 			textX = (barWidth - textW)*0.5;
-			textY = barHeight*barHeightPadRatio*0.5 + fontSize*0.3;
+			textY = barHeight* barHeightPadRatio *0.5 + fontSize*0.3;
 			gc.fillText(msText, textX, textY);
 			textW = getTextWidth(font, barNote.toString());
 			textX = (barWidth - textW)*0.5;
-			textY = barHeight - barHeight*barHeightPadRatio*0.5 + fontSize*0.3;
+			textY = barHeight - barHeight* barHeightPadRatio *0.5 + fontSize*0.3;
 			gc.fillText(barNote.toString(), textX, textY);
 		}
 

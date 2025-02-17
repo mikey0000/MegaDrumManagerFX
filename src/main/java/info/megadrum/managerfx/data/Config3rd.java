@@ -16,8 +16,7 @@ public class Config3rd {
     public boolean altNote_linked = false;
     public int syncState = Constants.SYNC_STATE_UNKNOWN;
     public boolean sysexReceived = false;
-    private int id = 0;
-
+    private final int id;
 
     public Config3rd(int i) {
         id = i;
@@ -105,7 +104,7 @@ public class Config3rd {
     }
 
     public byte[] getSysexFromConfig() {
-        byte[] sysex_byte = new byte[2];
+        byte[] sysex_byte;
         byte[] sysex = new byte[Constants.MD_SYSEX_3RD_SIZE];
         int i = 0;
 
@@ -130,7 +129,7 @@ public class Config3rd {
         sysex_byte = Utils.byte2sysex((byte) dampenedNote);
         sysex[i++] = sysex_byte[0];
         sysex[i++] = sysex_byte[1];
-        sysex[i++] = Constants.SYSEX_END;
+        sysex[i] = Constants.SYSEX_END;
         return sysex;
     }
 
@@ -144,7 +143,7 @@ public class Config3rd {
             disabled = ((Utils.sysex2byte(sysex_byte) & 0x80) > 0);
             sysex_byte[0] = sysex[i++];
             sysex_byte[1] = sysex[i++];
-            threshold = (int) (Utils.sysex2byte(sysex_byte) & 0xff);
+            threshold = (Utils.sysex2byte(sysex_byte) & 0xff);
             sysex_byte[0] = sysex[i++];
             sysex_byte[1] = sysex[i++];
             pressrollNote = Utils.sysex2byte(sysex_byte);
@@ -152,11 +151,8 @@ public class Config3rd {
             sysex_byte[1] = sysex[i++];
             altNote = Utils.sysex2byte(sysex_byte);
             sysex_byte[0] = sysex[i++];
-            sysex_byte[1] = sysex[i++];
+            sysex_byte[1] = sysex[i];
             dampenedNote = Utils.sysex2byte(sysex_byte);
         }
-
     }
-
-
 }

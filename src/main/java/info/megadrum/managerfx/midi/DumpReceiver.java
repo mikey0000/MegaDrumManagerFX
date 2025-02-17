@@ -17,10 +17,6 @@ public class DumpReceiver implements Receiver {
         listenerList.add(MidiEventListener.class, listener);
     }
 
-    public void removeMidiEventListener(MidiEventListener listener) {
-        listenerList.remove(MidiEventListener.class, listener);
-    }
-
     protected void fireMidiEvent(MidiEvent evt) {
         Object[] listeners = listenerList.getListenerList();
         for (int i = 0; i < listeners.length; i = i + 2) {
@@ -30,15 +26,11 @@ public class DumpReceiver implements Receiver {
         }
     }
 
-    public DumpReceiver() {
-    }
-
     public void close() {
     }
 
     public byte[] getByteMessage() {
-        byte[] msg;
-        msg = bytemessage;
+        byte[] msg = bytemessage;
         bytemessage = null;
         return msg;
     }
@@ -67,5 +59,4 @@ public class DumpReceiver implements Receiver {
             getMetaMessage((MetaMessage) message);
         }
     }
-
 }

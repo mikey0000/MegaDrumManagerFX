@@ -10,22 +10,16 @@ import javafx.scene.layout.HBox;
 public class UICheckBox extends UIControl{
 	
 	private CheckBox checkBox;
-	private HBox layout;
-	private Boolean ignoreSyncState = false;
+    private boolean ignoreSyncState = false;
 
-	public UICheckBox(Boolean showCopyButton) {
-		super(showCopyButton);
-		init();
-	}
-	
-	public UICheckBox(String labelText, Boolean showCopyButton) {
+	public UICheckBox(String labelText, boolean showCopyButton) {
 		super(labelText, showCopyButton);
 		init();
 	}
 	
 	private void init () {
 		checkBox = new CheckBox();
-		checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+		checkBox.selectedProperty().addListener(new ChangeListener<>() {
 		    @Override
 		    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 		    	if (ignoreSyncState) {
@@ -47,20 +41,20 @@ public class UICheckBox extends UIControl{
 		    	}
 		    }
 		});
-		layout = new HBox();
+        HBox layout = new HBox();
 		layout.setAlignment(Pos.CENTER_LEFT);
 		layout.getChildren().addAll(checkBox);
 		initControl(layout);
   }
 	
     @Override
-    public void respondToResize(Double w, Double h) {
+    public void respondToResize(double w, double h) {
     	super.respondToResize(w, h);
     	double checkBoxFontSize = h*0.35;
     	checkBox.setStyle("-fx-font-size: " + checkBoxFontSize + "pt");
     }
     
-    public void uiCtlSetValue(Boolean selected, Boolean setFromSysex) {
+    public void uiCtlSetValue(boolean selected, boolean setFromSysex) {
     	if (selected != checkBox.isSelected()) {
     		changedFromSet = 1;
         	checkBox.setSelected(selected);    		
@@ -74,7 +68,7 @@ public class UICheckBox extends UIControl{
     	}
     }
         
-    public Boolean uiCtlIsSelected() {
+    public boolean uiCtlIsSelected() {
     	return checkBox.isSelected();
     }
     

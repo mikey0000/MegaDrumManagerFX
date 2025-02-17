@@ -168,7 +168,6 @@ public class ConfigPedal {
         byte[] sysex_short = new byte[4];
         byte flags;
         int i = 4;
-        //System.out.printf("length = %d\n", sysex.length);
         if (sysex.length >= sysex_length) {
             sysex_byte[0] = sysex[i++];
             sysex_byte[1] = sysex[i++];
@@ -314,14 +313,14 @@ public class ConfigPedal {
             sysex_byte[1] = sysex[i++];
             chickNote = Utils.sysex2byte(sysex_byte);
             sysex_byte[0] = sysex[i++];
-            sysex_byte[1] = sysex[i++];
+            sysex_byte[1] = sysex[i];
             splashNote = Utils.sysex2byte(sysex_byte);
         }
     }
 
     public byte[] getSysexFromConfig(int mcu_type) {
-        byte[] sysex_byte = new byte[2];
-        byte[] sysex_short = new byte[4];
+        byte[] sysex_byte;
+        byte[] sysex_short;
         int sysex_length = Constants.MD_SYSEX_PEDAL_SIZE;
         if (mcu_type == Constants.MCU_TYPE_STM32F205TEST1) {
             sysex_length = Constants.MD_SYSEX_PEDAL_SIZE_OLD;
@@ -332,7 +331,7 @@ public class ConfigPedal {
 
         sysex[i++] = Constants.SYSEX_START;
         sysex[i++] = Constants.MD_SYSEX;
-        sysex[i++] = 0; //(byte) chainId;
+        sysex[i++] = 0;
         sysex[i++] = Constants.MD_SYSEX_PEDAL;
 
         flags = (byte) (((type) ? 1 : 0) | (((autoLevels) ? 1 : 0) << 1) | (((altIn) ? 1 : 0) << 2) | (((reverseLevels) ? 1 : 0) << 3)
@@ -374,7 +373,7 @@ public class ConfigPedal {
         flags = (byte) ((softChicks) ? 1 : 0);
         flags = (byte) (flags | (ccRdcLvl << 1));
         flags = (byte) (flags | ((new_algorithm ? 1 : 0) << 3));
-        sysex_byte = Utils.byte2sysex((byte) flags);
+        sysex_byte = Utils.byte2sysex(flags);
         sysex[i++] = sysex_byte[0];
         sysex[i++] = sysex_byte[1];
         sysex_byte = Utils.byte2sysex((byte) semiOpenLevel);

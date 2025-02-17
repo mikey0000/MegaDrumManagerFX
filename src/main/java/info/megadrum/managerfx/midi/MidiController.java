@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.sound.midi.MidiDevice;
-import javax.sound.midi.Receiver;
-import javax.sound.midi.Transmitter;
 import javax.swing.event.EventListenerList;
 
 import info.megadrum.managerfx.utils.Constants;
@@ -24,17 +21,10 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ProgressBar;
 
 public class MidiController {
-    private MidiDevice midiin;
-    private MidiDevice midiout;
-    private MidiDevice midithru;
-    private MidiDevice.Info[]	aInfos;
-    private Receiver receiver;
-    private Receiver thruReceiver;
-    private DumpReceiver dump_receiver;
-    private Transmitter	transmitter;
+    private final DumpReceiver dump_receiver;
     private Boolean isInFirmwareUpgrade = false;
 
-    private Midi_handler midiHandler;
+    private final MidiHandler midiHandler;
     private Boolean sysexTimedOut = false;
     private Boolean sysexMismatch = false;
     private Boolean sysexReceived;
@@ -42,34 +32,31 @@ public class MidiController {
     private byte currentSysexId;
     private boolean currentSysexWithId;
     private Integer sendSysexConfigRetries = 1;
-    private String sendSysexConfigResult = "";
     private Boolean compareSysex = false;
-    private byte [] sysexToCompare;
-    private int [] sysexStatus;
+    private byte[] sysexToCompare;
+    private final int[] sysexStatus;
     private int chainId;
     private boolean upgradeCancelled = false;
     private String upgradeResultString;
     private int upgradeError;
 
-    private List<byte[]> sysexSendListLocal;
-    private List<byte[]> receivedMidiDataList;
+    private final List<byte[]> receivedMidiDataList;
 
     class SendSysexTask<V> extends Task<V> {
 
         private List<byte[]> sysexesList;
         private Integer maxRetries;
         private Integer retryDelay;
-        private byte [] buf;
 
         @Override
-        protected V call()  {
+        protected V call() {
             try {
                 sysexStatus[0] = Constants.MD_SYSEX_STATUS_OK;
                 int i = 0;
                 final int max = sysexesList.size();
                 updateProgress(0, max);
-                while (sysexesList.size() > 0) {
-                    buf = sysexesList.get(0);
+                while (!sysexesList.isEmpty()) {
+                    byte[] buf = sysexesList.getFirst();
                     if (buf.length > 3) {
                         sysexStatus[1] = buf[3];
                     } else {
@@ -84,7 +71,7 @@ public class MidiController {
                     }
                     updateProgress(i, max);
                     i++;
-                    sysexesList.remove(0);
+                    sysexesList.removeFirst();
                 }
             } catch (Exception e) {
                 Utils.show_error(String.format("Sysex Send thread exception text = %s\n", e.getMessage()));
@@ -107,29 +94,18 @@ public class MidiController {
     public void addMidiEventListener(MidiEventListener listener) {
         listenerList.add(MidiEventListener.class, listener);
     }
-    public void removeMidiEventListener(MidiEventListener listener) {
-        listenerList.remove(MidiEventListener.class, listener);
-    }
+
     protected void fireMidiEvent(MidiEvent evt) {
         Object[] listeners = listenerList.getListenerList();
-        for (int i = 0; i < listeners.length; i = i+2) {
+        for (int i = 0; i < listeners.length; i = i + 2) {
             if (listeners[i] == MidiEventListener.class) {
-                ((MidiEventListener) listeners[i+1]).midiEventOccurred(evt);
-            }
-        }
-    }
-
-    protected void fireMidiEventWithBuffer(MidiEvent evt, byte [] buffer) {
-        Object[] listeners = listenerList.getListenerList();
-        for (int i = 0; i < listeners.length; i = i+2) {
-            if (listeners[i] == MidiEventListener.class) {
-                ((MidiEventListener) listeners[i+1]).midiEventOccurredWithBuffer(evt, buffer);
+                ((MidiEventListener) listeners[i + 1]).midiEventOccurred(evt);
             }
         }
     }
 
     public MidiController() {
-        midiHandler = new Midi_handler();
+        midiHandler = new MidiHandler();
         dump_receiver = midiHandler.getDumpReceiver();
         receivedMidiDataList = new ArrayList<>();
         sysexStatus = new int[2];
@@ -150,25 +126,22 @@ public class MidiController {
                 }
             }
 
-            @Override
-            public void midiEventOccurredWithBuffer(MidiEvent evt, byte[] buffer) {
-            }
         });
     }
 
-    private void processSysex(byte [] buffer) {
+    private void processSysex(byte[] buffer) {
         if (compareSysex) {
             if (buffer[3] == Constants.MD_SYSEX_GLOBAL_MISC) {
-                buffer[8] = (byte)(buffer[8]&0xfe);
-                buffer[9] = (byte)(buffer[9]&0xf6);
-                sysexToCompare[8] = (byte)(sysexToCompare[8]&0xfe);
-                sysexToCompare[9] = (byte)(sysexToCompare[9]&0xf6);
+                buffer[8] = (byte) (buffer[8] & 0xfe);
+                buffer[9] = (byte) (buffer[9] & 0xf6);
+                sysexToCompare[8] = (byte) (sysexToCompare[8] & 0xfe);
+                sysexToCompare[9] = (byte) (sysexToCompare[9] & 0xf6);
             }
             if (Arrays.equals(buffer, sysexToCompare)) {
                 sysexReceived = true;
             } else {
                 sysexStatus[0] = Constants.MD_SYSEX_STATUS_MISMATCH;
-                for (int i= 0; i < buffer.length; i++) {
+                for (int i = 0; i < buffer.length; i++) {
                     if (buffer[i] != sysexToCompare[i]) {
                         break;
                     }
@@ -197,7 +170,7 @@ public class MidiController {
         return sysexStatus;
     }
 
-    private void processShortMidi(byte [] buffer) {
+    private void processShortMidi(byte[] buffer) {
         receivedMidiDataList.add(buffer);
         fireMidiEvent(new MidiEvent(this));
     }
@@ -206,11 +179,11 @@ public class MidiController {
         return receivedMidiDataList;
     }
 
-    public String [] getMidiInList() {
+    public String[] getMidiInList() {
         return midiHandler.getMidiInList();
     }
 
-    public String [] getMidiOutList() {
+    public String[] getMidiOutList() {
         return midiHandler.getMidiOutList();
     }
 
@@ -221,10 +194,6 @@ public class MidiController {
         midiHandler.initPorts();
     }
 
-    public void closeMidi() {
-
-    }
-
     private void midi_reset_ports() {
         midiHandler.clearMidiOut();
     }
@@ -233,19 +202,19 @@ public class MidiController {
         if (sendSysexTask != null) {
             sendSysexTask = null;
         }
-        sendSysexTask = new SendSysexTask<Void>();
+        sendSysexTask = new SendSysexTask<>();
     }
 
     public void addSendSysexTaskSucceedEventHandler(EventHandler<WorkerStateEvent> eh) {
         sendSysexTask.setOnSucceeded(eh);
     }
 
-    public void setChainId(int id ) {
+    public void setChainId(int id) {
         midiHandler.setChainId(id);
         chainId = id;
     }
 
-    public void sendSysexFromThread(byte [] sysex, Integer maxRetries, Integer retryDelay) {
+    public void sendSysexFromThread(byte[] sysex, Integer maxRetries, Integer retryDelay) {
         sendSysexConfigRetries = 10;
         byte type;
         byte id;
@@ -267,14 +236,14 @@ public class MidiController {
             if (sysex.length > 2) {
                 if (sysexMismatch) {
                     sysexMismatch = false;
-                    sysex[2] = (byte)chainId;
+                    sysex[2] = (byte) chainId;
                     sysexToCompare = Arrays.copyOf(sysex, sysex.length);
                     compareSysex = true;
                     midiHandler.sendSysex(sysex);
                     if (sendSysexConfigRetries < maxRetries) {
-                        Utils.delayMs(sysex.length/4);
+                        Utils.delayMs(sysex.length / 4);
                     }
-                    Utils.delayMs(sysex.length/5);
+                    Utils.delayMs(sysex.length / 5);
                 }
                 compareSysex = true;
             }
@@ -315,9 +284,9 @@ public class MidiController {
                 case Constants.MD_SYSEX_PAD:
                     currentSysexWithId = true;
                     if (sysex.length > 2) {
-                        currentSysexId = (byte)(id);
+                        currentSysexId = id;
                     } else {
-                        currentSysexId = (byte)(id + 1);
+                        currentSysexId = (byte) (id + 1);
                     }
                     midiHandler.requestConfigPad(currentSysexId);
                     break;
@@ -356,30 +325,22 @@ public class MidiController {
             }
         }
         if (!sysexReceived) {
-            sendSysexConfigResult = "Sysex timed out";
             sysexTimedOut = true;
         }
     }
 
     public int sendSysex(List<byte[]> sysexSendList, ProgressBar progressBar, Integer maxRetries, Integer retryDelay) {
         int result = 0;
-        sendSysexConfigResult = "";
         sysexReceived = false;
         sendSysexConfigRetries = maxRetries;
         sysexTimedOut = false;
 
         if (midiHandler.isMidiOpen()) {
-            sysexSendListLocal = new ArrayList<>(sysexSendList);
+            List<byte[]> sysexSendListLocal = new ArrayList<>(sysexSendList);
             sysexSendList.clear();
-            sendSysexTask.setParameters(sysexSendListLocal,maxRetries,retryDelay);
+            sendSysexTask.setParameters(sysexSendListLocal, maxRetries, retryDelay);
             progressBar.progressProperty().bind(sendSysexTask.progressProperty());
-            Platform.runLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    new Thread(sendSysexTask).start();
-                }
-            });
+            Platform.runLater(() -> new Thread(sendSysexTask).start());
         } else {
             progressBar.setVisible(false);
             result = 1;
@@ -388,22 +349,22 @@ public class MidiController {
     }
 
     private static int readHex(DataInputStream d) throws IOException {
-        StringBuffer curr;
+        StringBuilder curr;
         int result;
 
-        curr = new StringBuffer("");
+        curr = new StringBuilder();
 
         curr.append(String.format("%c", d.readByte()).toUpperCase());
         curr.append(String.format("%c", d.readByte()).toUpperCase());
 
-        result = Integer.parseInt(curr.toString(),16);
+        result = Integer.parseInt(curr.toString(), 16);
         return result;
     }
 
-    public Task<Integer> doFirmwareUpgrade (File file, int mcuType, ProgressBar progressBar) throws IOException {
+    public Task<Integer> doFirmwareUpgrade(File file, int mcuType, ProgressBar progressBar) throws IOException {
         FileInputStream fis = null;
-        BufferedInputStream bis = null;
-        DataInputStream dis = null;
+        BufferedInputStream bis;
+        DataInputStream dis;
         upgradeResultString = "Upgrade completed successufully";
         upgradeCancelled = false;
         int[] buffer = new int[0x40000];
@@ -418,10 +379,10 @@ public class MidiController {
                     file.getAbsolutePath() + "\n" +
                     "(" + e.getMessage() + ")");
         }
+        assert fis != null;
         bis = new BufferedInputStream(fis);
         dis = new DataInputStream(bis);
-        while (dis.available() > 1)
-        {
+        while (dis.available() > 1) {
             buffer[bufferSize] = readHex(dis);
             bufferSize++;
         }
@@ -430,20 +391,16 @@ public class MidiController {
         fis.close();
 
         final int bufferSizeFinal = bufferSize;
-        Task<Integer> task = new Task<Integer>() {
+        Task<Integer> task = new Task<>() {
             int frameSize;
-            int receivedByte;
             int bytesSent = 0;
             int prevBytesSent = 0;
             int retries = 0;
-            int nBytes;
             int inDelay;
-            boolean firstDelay;
-            byte[] receivedBuffer;
 
 
             @Override
-            protected Integer call() throws Exception {
+            protected Integer call() {
                 updateProgress(0, bufferSizeFinal);
 
                 if (mcuType > 2) {
@@ -454,25 +411,23 @@ public class MidiController {
                 midiHandler.initPorts();
                 midiHandler.clear_midi_input();
 
-
-                firstDelay = true;
-                for(int index = 0; index < bufferSizeFinal; index += frameSize)
-                {
+                boolean firstDelay = true;
+                for (int index = 0; index < bufferSizeFinal; index += frameSize) {
                     frameSize = ((buffer[index] << 8) | buffer[index + 1]) + 2;
-                    if (((bytesSent-prevBytesSent)*100/(bufferSizeFinal/10)) > 1) {
+                    if (((bytesSent - prevBytesSent) * 100 / (bufferSizeFinal / 10)) > 1) {
                         updateProgress(bytesSent, bufferSizeFinal);
                         prevBytesSent = bytesSent;
                     }
-                    midiHandler.writeMid(receiver, buffer, index, frameSize);
+//                    midiHandler.writeMid(receiver, buffer, index, frameSize);
 
-                    nBytes = 0;
+                    int nBytes = 0;
                     if (firstDelay) {
                         inDelay = 5000;
                         firstDelay = false;
                     } else {
                         inDelay = 1000;
                     }
-                    receivedBuffer = null;
+                    byte[] receivedBuffer = null;
                     int t = 0;
                     while ((nBytes == 0) && (inDelay > 0)) {
                         receivedBuffer = dump_receiver.getByteMessage();
@@ -480,55 +435,48 @@ public class MidiController {
                         if (t > 100) {
                             t = 0;
                         }
-                        if (receivedBuffer != null)
-                        {
+                        if (receivedBuffer != null) {
                             nBytes = receivedBuffer.length;
                         }
                         inDelay--;
                         Utils.delayMs(2);
                         if (upgradeCancelled) break;
                     }
-                    receivedByte = Constants.Error_NoResponse;
+                    int receivedByte = Constants.Error_NoResponse;
                     if (nBytes > 2) {
-                        receivedByte = receivedBuffer[1]<<4;
-                        receivedByte = receivedBuffer[2]|receivedByte;
-                    } else {
-                        if (nBytes > 0) {
-                            receivedByte = Constants.Error_Read;
-                        }
+                        receivedByte = receivedBuffer[1] << 4;
+                        receivedByte = receivedBuffer[2] | receivedByte;
+                    } else if (nBytes > 0) {
+                        receivedByte = Constants.Error_Read;
                     }
 
-                    switch (receivedByte) {
-                        case Constants.Error_OK:
-                            bytesSent += frameSize;
-                            retries = 0;
-                            break;
-
-                        default:
-                            if (++retries < 4) {
-                                index -= frameSize;
-                                Utils.delayMs(10);
-                            } else {
-                                switch (receivedByte) {
-                                    case Constants.Error_CRC:
-                                        upgradeError = 2;
-                                        upgradeResultString = "CRC error. File damaged?";
-                                        break;
-                                    case Constants.Error_NoResponse:
-                                        upgradeError = 3;
-                                        upgradeResultString = "MegaDrum is not responding";
-                                        break;
-                                    case Constants.Error_Read:
-                                        upgradeError = 4;
-                                        upgradeResultString = "Read error. Bad communication?";
-                                        break;
-                                    default:
-                                        upgradeError = 99;
-                                        upgradeResultString = "Unknown error";
-                                        break;
-                                }
+                    if (receivedByte == Constants.Error_OK) {
+                        bytesSent += frameSize;
+                        retries = 0;
+                    } else {
+                        if (++retries < 4) {
+                            index -= frameSize;
+                            Utils.delayMs(10);
+                        } else {
+                            switch (receivedByte) {
+                                case Constants.Error_CRC:
+                                    upgradeError = 2;
+                                    upgradeResultString = "CRC error. File damaged?";
+                                    break;
+                                case Constants.Error_NoResponse:
+                                    upgradeError = 3;
+                                    upgradeResultString = "MegaDrum is not responding";
+                                    break;
+                                case Constants.Error_Read:
+                                    upgradeError = 4;
+                                    upgradeResultString = "Read error. Bad communication?";
+                                    break;
+                                default:
+                                    upgradeError = 99;
+                                    upgradeResultString = "Unknown error";
+                                    break;
                             }
-                            break;
+                        }
                     }
                     if (upgradeCancelled) {
                         upgradeError = 1;
@@ -559,10 +507,6 @@ public class MidiController {
 
     public String getUpgradeString() {
         return upgradeResultString;
-    }
-
-    public void getMidi() {
-        midiHandler.getMidi();
     }
 
     public Boolean isMidiOpen() {

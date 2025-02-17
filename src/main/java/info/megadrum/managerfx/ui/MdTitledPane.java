@@ -7,8 +7,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 public class MdTitledPane extends Pane {
-	private Label titleLabel;
-	private VBox vBox;
+	private final Label titleLabel;
+	private final VBox vBox;
 	public MdTitledPane () {
 		
 		titleLabel = new Label();

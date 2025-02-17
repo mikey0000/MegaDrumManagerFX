@@ -13,217 +13,157 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 
 public class UISpinner extends UIControl {
-	private SpinnerFast<Integer> spinnerFast;
-	private Integer minValue;
-	private Integer maxValue;
-	private Double lastHeight = 10.0;
-	private Double lastWidth = 10.0;
-	private Integer spinnerType = Constants.FX_SPINNER_TYPE_STANDARD;
-	//private Integer initValue;
-	//private Integer currentValue;
-	private Integer step;
-	private HBox layout;
-	private SpinnerValueFactory<Integer> valueFactory;
-	private Boolean changedByEdit = false;
-	private Integer changedByEditTimers = 0;
+    private SpinnerFast<Integer> spinnerFast;
+    private int minValue;
+    private Integer maxValue;
+    private int spinnerType = Constants.FX_SPINNER_TYPE_STANDARD;
+    private int step;
+    private SpinnerValueFactory<Integer> valueFactory;
+    private boolean changedByEdit = false;
+    private int changedByEditTimers = 0;
 
-	public UISpinner(Boolean showCopyButton) {
-		super(showCopyButton);
-		init();
-	}
-	
-	public UISpinner(Integer min, Integer max, Integer initial, Integer s, Boolean showCopyButton) {
-		super(showCopyButton);
-		init(min, max, initial, s);
-	}
-	
-	public UISpinner(String labelText, Boolean showCopyButton) {
-		super(labelText, showCopyButton);
-		init();
-	}
+    public UISpinner(String labelText, Integer min, Integer max, Integer initial, Integer s, Boolean showCopyButton) {
+        super(labelText, showCopyButton);
+        init(min, max, initial, s);
+    }
 
-	public UISpinner(String labelText, Integer min, Integer max, Integer initial, Integer s, Boolean showCopyButton) {
-		super(labelText, showCopyButton);
-		init(min, max, initial, s);
-	}
+    private void init(Integer min, Integer max, Integer initial, Integer s) {
+        minValue = min;
+        maxValue = max;
+        intValue = initial;
+        valueType = Constants.VALUE_TYPE_INT;
 
-	private void init() {
-		init(0,100,0,1);
-	}
-	
-	private void init(Integer min, Integer max, Integer initial, Integer s) {
-		minValue = min;
-		maxValue = max;
-		intValue = initial;
-		valueType = Constants.VALUE_TYPE_INT;
+        step = s;
+        valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(minValue, maxValue, intValue, step);
 
-		step = s;
-		valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(minValue, maxValue, intValue, step);
+        spinnerFast = new SpinnerFast<>();
+        spinnerFast.setValueFactory(valueFactory);
+        spinnerFast.setEditable(true);
+        spinnerFast.getEditor().textProperty().addListener(new ChangeListener<>() {
 
-		spinnerFast = new SpinnerFast<Integer>();
-		spinnerFast.setValueFactory(valueFactory);
-		spinnerFast.setEditable(true);
-		//uispinner.getEditor().setStyle("-fx-text-fill: black; -fx-alignment: CENTER_RIGHT;"
-		//		);    
-		//uispinner.set
-		spinnerFast.getEditor().textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (changedFromSet > 0) {
+                    changedFromSet--;
+                } else {
+                    if (!newValue.matches("\\d*")) {
+                        spinnerFast.getEditor().setText(String.valueOf(intValue));
+                    } else {
+                        if (newValue.matches("")) {
+                            spinnerFast.getEditor().setText(String.valueOf(intValue));
+                        } else {
+                            if (intValue != Integer.parseInt(newValue)) {
+                                intValue = (Integer.parseInt(newValue) / step) * step;
+                                if (spinnerType == Constants.FX_SPINNER_TYPE_STANDARD) {
+                                    if ((intValue >= minValue) & (intValue <= maxValue)) {
+                                        fireControlChangeEvent(new ControlChangeEvent(this), 0);
+                                        changedByEdit = true;
+                                        changedByEditTimers++;
+                                        new Timer().schedule(new TimerTask() {
 
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				//System.out.printf("%s: Entered value = %s\n",label.getText(),Integer.valueOf(newValue),newValue );
-				// Spinner number validation
-		    	if (changedFromSet > 0) {
-		    		changedFromSet--;
-		        	//System.out.printf("changedFromSet reduced to %d for %s\n", changedFromSet, label.getText());
-		    	} else {
-		        	//System.out.printf("Setting %s to %s\n", label.getText(), newValue);
-		            if (!newValue.matches("\\d*")) {
-		            	spinnerFast.getEditor().setText(intValue.toString());
-		            } else {
-						if (newValue.matches("")) {
-							spinnerFast.getEditor().setText(intValue.toString());
-						} else {
-							if (intValue.intValue() != Integer.valueOf(newValue).intValue()) {
-								//System.out.printf("%s: new value = %d, old value = %d\n",label.getText(),Integer.valueOf(newValue),intValue );
-								intValue = (Integer.valueOf(newValue)/step)*step;
-								if (spinnerType == Constants.FX_SPINNER_TYPE_STANDARD) {
-									if ((intValue >= minValue) & (intValue <= maxValue)) {
-										fireControlChangeEvent(new ControlChangeEvent(this), 0);
-										changedByEdit = true;
-										Timer changedByEditTimer = new Timer();
-										changedByEditTimers++;
-										changedByEditTimer.schedule(new TimerTask() {
-											
-											@Override
-											public void run() {
-												Platform.runLater(new Runnable() {
-													public void run() {
-														if (changedByEditTimers == 1) {
-															changedByEdit = false;
-															if (syncState != Constants.SYNC_STATE_UNKNOWN) {
-																if (intValue.intValue() == mdIntValue.intValue()) {
-																	setSyncState(Constants.SYNC_STATE_SYNCED);						
-																} else {
-																	setSyncState(Constants.SYNC_STATE_NOT_SYNCED);
-																}
-															}
-												    		if (Integer.valueOf(spinnerFast.getEditor().getText()) != intValue) {
-												    			Integer cursor = spinnerFast.getEditor().getCaretPosition();
-												    			spinnerFast.getEditor().setText(intValue.toString());
-												    			spinnerFast.getEditor().positionCaret(cursor);
-												    		}
-															//System.out.printf("%s: text value = %d, int value = %d, MD value = %d\n",label.getText(),Integer.valueOf(newValue),intValue,Integer.valueOf(mdIntValue) );
-														}
-														changedByEditTimers--;
-													}
-												});
-											}
-										}, 1500);
-									}
-									//resizeFont();
-								}
-							
-							}
-						}
-		            }		    		
-		    	}
-				if (syncState != Constants.SYNC_STATE_UNKNOWN) {
-					if (intValue.intValue() == mdIntValue.intValue()) {
-						setSyncState(Constants.SYNC_STATE_SYNCED);						
-					} else {
-						setSyncState(Constants.SYNC_STATE_NOT_SYNCED);
-					}
-				}
-			}
-	    });
-		
-	    layout = new HBox();
-	    layout.setAlignment(Pos.CENTER_LEFT);
-	    layout.getChildren().addAll(spinnerFast);
-		initControl(layout);
-	}
-    
-    private void resizeFont(Double h) {
-		Double we = h*2.2;
-		Integer l = maxValue.toString().length();
-		Double ll = (16/(16 + l.doubleValue()))*1.0;
-		//uispinner.getEditor().setFont(new Font(h*0.4));
-		switch (spinnerType) {
-		case Constants.FX_SPINNER_TYPE_SYSEX:
-			we = 16.0;
-			break;
-		case Constants.FX_SPINNER_TYPE_STANDARD:
-		default:
-			we = we*ll*0.3;
-			break;
-		}
-		spinnerFast.getEditor().setFont(new Font(we));
-		//System.out.printf("Setting spinner %s font to %f\n", label.getText(), we);
-		//layout.setStyle("-fx-font-size: 3pt");
+                                            @Override
+                                            public void run() {
+                                                Platform.runLater(() -> {
+                                                    if (changedByEditTimers == 1) {
+                                                        changedByEdit = false;
+                                                        if (syncState != Constants.SYNC_STATE_UNKNOWN) {
+                                                            if (intValue == mdIntValue) {
+                                                                setSyncState(Constants.SYNC_STATE_SYNCED);
+                                                            } else {
+                                                                setSyncState(Constants.SYNC_STATE_NOT_SYNCED);
+                                                            }
+                                                        }
+                                                        if (!Integer.valueOf(spinnerFast.getEditor().getText()).equals(intValue)) {
+                                                            int cursor = spinnerFast.getEditor().getCaretPosition();
+                                                            spinnerFast.getEditor().setText(String.valueOf(intValue));
+                                                            spinnerFast.getEditor().positionCaret(cursor);
+                                                        }
+                                                    }
+                                                    changedByEditTimers--;
+                                                });
+                                            }
+                                        }, 1500);
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+                if (syncState != Constants.SYNC_STATE_UNKNOWN) {
+                    if (intValue == mdIntValue) {
+                        setSyncState(Constants.SYNC_STATE_SYNCED);
+                    } else {
+                        setSyncState(Constants.SYNC_STATE_NOT_SYNCED);
+                    }
+                }
+            }
+        });
+
+        HBox layout = new HBox();
+        layout.setAlignment(Pos.CENTER_LEFT);
+        layout.getChildren().addAll(spinnerFast);
+        initControl(layout);
+    }
+
+    private void resizeFont(double h) {
+        int l = maxValue.toString().length();
+        double ll = (16 / (16 + (double) l));
+        double we;
+        if (spinnerType == Constants.FX_SPINNER_TYPE_SYSEX) {
+            we = 16.0;
+        } else {
+            we = h * 2.2 * ll * 0.3;
+        }
+        spinnerFast.getEditor().setFont(new Font(we));
     }
 
     @Override
-    public void respondToResize(Double w, Double h) {
-    	super.respondToResize(w, h);
-    	Double spinnerButtonsFontSize = h*0.3;
-    	lastHeight = h;
-    	lastWidth = w;
-//    	Double width = w*0.28;
-    	Double width = h*3.0;
-		spinnerFast.setMinHeight(h);
-		spinnerFast.setMaxHeight(h);
-		//uispinner.setMaxWidth(h*2 + 30.0);
-		//uispinner.setMinWidth(h*2 + 30.0);
-		switch (spinnerType) {
-		case Constants.FX_SPINNER_TYPE_SYSEX:
-			width = w*0.15;
-			break;
-		case Constants.FX_SPINNER_TYPE_STANDARD:
-		default:
-			//width = w*0.25;
-			break;
-		}
-		//System.out.printf("Setting spinner %s width to %f\n", label.getText(), width);
-		spinnerFast.setMaxWidth(width);
-		spinnerFast.setMinWidth(width);
-		// Spinner buttons size is actually controlled by -fx-font-size on the spinner
-		spinnerFast.setStyle("-fx-font-size: " + spinnerButtonsFontSize.toString() + "pt");
-		resizeFont(h);
-		
+    public void respondToResize(double w, double h) {
+        super.respondToResize(w, h);
+        double spinnerButtonsFontSize = h * 0.3;
+        double width = h * 3.0;
+        spinnerFast.setMinHeight(h);
+        spinnerFast.setMaxHeight(h);
+        switch (spinnerType) {
+            case Constants.FX_SPINNER_TYPE_SYSEX:
+                width = w * 0.15;
+                break;
+            case Constants.FX_SPINNER_TYPE_STANDARD:
+            default:
+                break;
+        }
+        spinnerFast.setMaxWidth(width);
+        spinnerFast.setMinWidth(width);
+        spinnerFast.setStyle("-fx-font-size: " + spinnerButtonsFontSize + "pt");
+        resizeFont(h);
     }
-/*
-    @Override
-	public void setControlMinWidth(Double w) {
-    	// don't change spinner control width so override setControlMinWidth here
-	}
-*/
-    public void uiCtlSetValue(Integer n, Boolean setFromSysex) {
-    	if ((intValue.intValue()/step) != (n.intValue()/step)) {
-        	changedFromSet++;
-    		intValue = n;
-    	}
-    	//System.out.printf("changedFromSet = %d for %s\n", changedFromSet, label.getText());
-    	if (setFromSysex) {
-    		setSyncState(Constants.SYNC_STATE_SYNCED);
-    		mdIntValue = n;
-        	//System.out.printf("Last MD value = %d for %s\n", n, label.getText());
-    	} else {
-        	updateSyncStateConditional();
-    	}
-    	if (!changedByEdit) {
-        	valueFactory.setValue(n);
-        	spinnerFast.getEditor().setText(intValue.toString());
-    	}
-		changedByEdit = false;
-		resizeFont(spinnerFast.getHeight());
+
+    public void uiCtlSetValue(int n, boolean setFromSysex) {
+        if ((intValue / step) != (n / step)) {
+            changedFromSet++;
+            intValue = n;
+        }
+        if (setFromSysex) {
+            setSyncState(Constants.SYNC_STATE_SYNCED);
+            mdIntValue = n;
+        } else {
+            updateSyncStateConditional();
+        }
+        if (!changedByEdit) {
+            valueFactory.setValue(n);
+            spinnerFast.getEditor().setText(String.valueOf(intValue));
+        }
+        changedByEdit = false;
+        resizeFont(spinnerFast.getHeight());
     }
-    
-   public Integer uiCtlGetValue() {
-    	return intValue;
+
+    public Integer uiCtlGetValue() {
+        return intValue;
     }
-    
+
     public void setSpinnerType(Integer type) {
-    	spinnerType = type;
+        spinnerType = type;
     }
-    
+
 }

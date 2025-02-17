@@ -6,8 +6,11 @@ import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.PropertiesConfigurationLayout;
 import org.apache.commons.configuration2.ex.ConversionException;
 
+import java.io.Serial;
+
 public class ConfigFull implements java.io.Serializable {
 
+    @Serial
     private static final long serialVersionUID = 4402239785688415814L;
     public ConfigGlobalMisc configGlobalMisc;
     public ConfigMisc configMisc;
@@ -20,9 +23,6 @@ public class ConfigFull implements java.io.Serializable {
     public ConfigConfigName[] configConfigNames;
     public int customNamesCount = 2;
     public int configNamesCount;
-    public int configCurrent;
-    public boolean configNameChanged = false;
-    public boolean configNameSysexReceived = false;
     public boolean configCountSysexReceived = false;
     public boolean configCurrentSysexReceived = false;
     private static final String configGlobalMiscPrefix = "global_misc.";
@@ -109,24 +109,6 @@ public class ConfigFull implements java.io.Serializable {
         customNamesCount = Utils.validateInt(prop.getInt(configCustomNamePrefix + "Count", customNamesCount), 2, 32, customNamesCount);
         for (int i = 0; i < Constants.CUSTOM_NAMES_MAX; i++) {
             configCustomNames[i].copyFromPropertiesConfiguration(prop, configCustomNamePrefix, i);
-        }
-    }
-
-    public void resetSyncState() {
-        configMisc.syncState = Constants.SYNC_STATE_UNKNOWN;
-        configPedal.syncState = Constants.SYNC_STATE_UNKNOWN;
-        configGlobalMisc.syncState = Constants.SYNC_STATE_UNKNOWN;
-        for (int i = 0; i < Constants.PADS_COUNT; i++) {
-            configPads[i].syncState = Constants.SYNC_STATE_UNKNOWN;
-            if ((i > 0) && ((i & 0x01) == 0)) {
-                config3rds[(i - 1) / 2].syncState = Constants.SYNC_STATE_UNKNOWN;
-            }
-        }
-        for (int i = 0; i < Constants.CURVES_COUNT; i++) {
-            configCurves[i].syncState = Constants.SYNC_STATE_UNKNOWN;
-        }
-        for (int i = 0; i < Constants.CUSTOM_NAMES_MAX; i++) {
-            configCustomNames[i].syncState = Constants.SYNC_STATE_UNKNOWN;
         }
     }
 }

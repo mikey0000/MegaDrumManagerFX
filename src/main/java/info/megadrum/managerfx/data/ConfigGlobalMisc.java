@@ -7,8 +7,6 @@ import org.apache.commons.configuration2.PropertiesConfigurationLayout;
 
 public class ConfigGlobalMisc {
 
-    public boolean changed;
-
     public int lcd_contrast = 50;
     public int inputs_count = 18;
     public boolean custom_names_en = false;
@@ -38,8 +36,8 @@ public class ConfigGlobalMisc {
     }
 
     public byte[] getSysexFromConfig() {
-        byte [] sysex_byte = new byte[2];
-        byte [] sysex_short = new byte[4];
+        byte [] sysex_byte;
+        byte [] sysex_short;
         byte [] sysex = new byte[Constants.MD_SYSEX_GLOBAL_MISC_SIZE];
         short flags;
         int i = 0;
@@ -49,7 +47,7 @@ public class ConfigGlobalMisc {
         );
         sysex[i++] = Constants.SYSEX_START;
         sysex[i++] = Constants.MD_SYSEX;
-        sysex[i++] = 0; //(byte)chainId;
+        sysex[i++] = 0;
         sysex[i++] = Constants.MD_SYSEX_GLOBAL_MISC;
 
         sysex_byte = Utils.byte2sysex((byte)(100 - lcd_contrast));
@@ -63,7 +61,7 @@ public class ConfigGlobalMisc {
         sysex[i++] = sysex_short[1];
         sysex[i++] = sysex_short[2];
         sysex[i++] = sysex_short[3];
-        sysex[i++] = Constants.SYSEX_END;
+        sysex[i] = Constants.SYSEX_END;
         return sysex;
     }
 
@@ -83,14 +81,11 @@ public class ConfigGlobalMisc {
             sysex_short[0] = sysex[i++];
             sysex_short[1] = sysex[i++];
             sysex_short[2] = sysex[i++];
-            sysex_short[3] = sysex[i++];
+            sysex_short[3] = sysex[i];
             flags = Utils.sysex2short(sysex_short);
             custom_names_en = ((flags&(1<<1)) != 0);
             config_names_en = ((flags&(1<<2)) != 0);
             midi2_for_sysex = ((flags&(1<<5)) != 0);
         }
-
     }
-
-
 }

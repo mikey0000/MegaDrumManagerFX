@@ -6,21 +6,21 @@ import info.megadrum.managerfx.utils.Utils;
 public class ConfigConfigName {
     public String name = "            ";
     public boolean sysexReceived = false;
-    private int id;
+    private final int id;
 
     public ConfigConfigName(int i) {
         id = i;
     }
 
     public byte[] getSysexFromConfig() {
-        byte [] sysex_byte = new byte[2];
+        byte [] sysex_byte;
         byte [] sysex = new byte[Constants.MD_SYSEX_CONFIG_NAME_SIZE];
         String nameString;
         byte [] nameBytes;
         int i = 0;
         sysex[i++] = Constants.SYSEX_START;
         sysex[i++] = Constants.MD_SYSEX;
-        sysex[i++] = 0; //(byte) chainId;
+        sysex[i++] = 0;
         sysex[i++] = Constants.MD_SYSEX_CONFIG_NAME;
         sysex[i++] = (byte)id;
 
@@ -32,7 +32,7 @@ public class ConfigConfigName {
             sysex[i++] = sysex_byte[0];
             sysex[i++] = sysex_byte[1];
         }
-        sysex[i++] = Constants.SYSEX_END;
+        sysex[i] = Constants.SYSEX_END;
         return sysex;
     }
 

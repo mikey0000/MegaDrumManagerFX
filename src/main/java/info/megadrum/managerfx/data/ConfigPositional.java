@@ -11,8 +11,7 @@ public class ConfigPositional {
     public int high = 15;
     public int syncState = Constants.SYNC_STATE_UNKNOWN;
     public boolean sysexReceived = false;
-    private int id;
-
+    private final int id;
 
     public ConfigPositional(int i) {
         id = i;
@@ -70,17 +69,15 @@ public class ConfigPositional {
     }
 
     public byte[] getSysexFromConfig() {
-        byte [] sysex_byte = new byte[2];
         byte [] sysex = new byte[Constants.MD_SYSEX_POS_SIZE];
         int i = 0;
-
         sysex[i++] = Constants.SYSEX_START;
         sysex[i++] = Constants.MD_SYSEX;
-        sysex[i++] = 0; //(byte)chainId;
+        sysex[i++] = 0;
         sysex[i++] = Constants.MD_SYSEX_POS;
         sysex[i++] = (byte)id;
 
-        sysex_byte = Utils.byte2sysex((byte)level);
+        byte [] sysex_byte = Utils.byte2sysex((byte)level);
         sysex[i++] = sysex_byte[0];
         sysex[i++] = sysex_byte[1];
         sysex_byte = Utils.byte2sysex((byte)low);
@@ -109,6 +106,4 @@ public class ConfigPositional {
             high = Utils.sysex2byte(sysex_byte);
         }
     }
-
-
 }

@@ -9,7 +9,7 @@ public class ConfigCustomName {
     public String name = "Custom__";
     public int syncState = Constants.SYNC_STATE_UNKNOWN;
     public boolean sysexReceived = false;
-    private int id;
+    private final int id;
 
     public ConfigCustomName(int i) {
         id = i;

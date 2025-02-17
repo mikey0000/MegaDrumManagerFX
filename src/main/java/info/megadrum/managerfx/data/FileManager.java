@@ -14,12 +14,11 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.ex.ConversionException;
 
 public class FileManager {
-    private FileChooser fileChooser;
-    private Stage parent;
+    private final FileChooser fileChooser;
+    private final Stage parent;
     private File file = null;
-    private PropertiesConfiguration fullConfig;
 
-    public FileManager (Stage parentWindow) {
+    public FileManager(Stage parentWindow) {
         fileChooser = new FileChooser();
         parent = parentWindow;
     }
@@ -51,12 +50,12 @@ public class FileManager {
         FileChooser.ExtensionFilter configFileFilter = new FileChooser.ExtensionFilter("MegaDrum full config files (*.mds)", "*.mds");
         fileChooser.getExtensionFilters().clear();
         fileChooser.getExtensionFilters().add(configFileFilter);
-        if (!options.configFullPaths[options.lastConfig].equals("")) {
+        if (!options.configFullPaths[options.lastConfig].isEmpty()) {
             fileChooser.setInitialDirectory(new File(options.configFullPaths[options.lastConfig]).getParentFile());
         }
         fileChooser.setInitialFileName(options.configFileNames[options.lastConfig]);
         file = fileChooser.showSaveDialog(parent);
-        if(file != null) {
+        if (file != null) {
             result = true;
             if (!(file.getName().toLowerCase().endsWith(".mds"))) {
                 file = new File(file.getAbsolutePath() + ".mds");
@@ -74,12 +73,11 @@ public class FileManager {
     }
 
     public void loadConfigFull(ConfigFull config, File file, ConfigOptions options) {
-        fullConfig = new PropertiesConfiguration();
+        PropertiesConfiguration fullConfig = new PropertiesConfiguration();
         PropertiesConfigurationLayout layout = new PropertiesConfigurationLayout();
 
         try (FileReader reader = new FileReader(file)) {
             layout.load(fullConfig, reader);
-
             try {
                 config.copyFromPropertiesConfiguration(fullConfig);
                 options.configLoaded[options.lastConfig] = true;
@@ -98,18 +96,16 @@ public class FileManager {
         FileChooser.ExtensionFilter configFileFilter = new FileChooser.ExtensionFilter("MegaDrum full config files (*.mds)", "*.mds");
         fileChooser.getExtensionFilters().clear();
         fileChooser.getExtensionFilters().add(configFileFilter);
-        if (!options.configFullPaths[options.lastConfig].equals("")) {
+        if (!options.configFullPaths[options.lastConfig].isEmpty()) {
             fileChooser.setInitialDirectory(new File(options.configFullPaths[options.lastConfig]).getParentFile());
         }
         fileChooser.setInitialFileName(options.configFileNames[options.lastConfig]);
         file = fileChooser.showOpenDialog(parent);
-        if (file != null) {
-            if (file.exists()) {
-                result = true;
-                loadConfigFull(config,file,options);
-                options.configFullPaths[options.lastConfig] = file.getAbsolutePath();
-                options.configFileNames[options.lastConfig] = file.getName();
-            }
+        if (file != null && file.exists()) {
+            result = true;
+            loadConfigFull(config, file, options);
+            options.configFullPaths[options.lastConfig] = file.getAbsolutePath();
+            options.configFileNames[options.lastConfig] = file.getName();
         }
         return result;
     }
@@ -118,7 +114,7 @@ public class FileManager {
     public File selectFirmwareFile(ConfigOptions options) {
         FileChooser.ExtensionFilter extensionFilter;
         String stringNameMatch;
-        if (!options.lastFullPathFirmware.equals("")) {
+        if (!options.lastFullPathFirmware.isEmpty()) {
             fileChooser.setInitialDirectory(new File(options.lastFullPathFirmware).getParentFile());
         }
         extensionFilter = new FileChooser.ExtensionFilter("Firmware files (*.bin)", "*.bin");
@@ -160,7 +156,7 @@ public class FileManager {
         file = new File(options.configFullPaths[options.lastConfig]);
         if (file.exists()) {
             if (!file.isDirectory()) {
-                loadConfigFull(config,file,options);
+                loadConfigFull(config, file, options);
                 options.configFileNames[options.lastConfig] = file.getName();
                 options.configFullPaths[options.lastConfig] = file.getAbsolutePath();
             }
@@ -210,12 +206,12 @@ public class FileManager {
     }
 
 
-    public void saveSysex(byte [] sysex, ConfigOptions options) {
+    public void saveSysex(byte[] sysex, ConfigOptions options) {
         FileChooser.ExtensionFilter sysexFileFilter = new FileChooser.ExtensionFilter("Sysex files (*.syx)", "*.syx");
         fileChooser.getExtensionFilters().clear();
         fileChooser.getExtensionFilters().add(sysexFileFilter);
 
-        if (!options.lastFullPathSysex.equals("")) {
+        if (!options.lastFullPathSysex.isEmpty()) {
             fileChooser.setInitialDirectory(new File(options.lastFullPathSysex).getParentFile());
         }
         file = fileChooser.showSaveDialog(parent);
@@ -234,22 +230,20 @@ public class FileManager {
                 fos.flush();
                 fos.close();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                //e.printStackTrace();
                 Utils.show_error("Error saving Sysex to file:\n" +
                         file.getAbsolutePath() + "\n"
-                        +"(" + e.getMessage() + ")");
+                        + "(" + e.getMessage() + ")");
 
             }
         }
     }
 
-    public void loadSysex(byte [] sysex, ConfigOptions options) {
+    public void loadSysex(byte[] sysex, ConfigOptions options) {
         FileChooser.ExtensionFilter sysexFileFilter = new FileChooser.ExtensionFilter("Sysex files (*.syx)", "*.syx");
         fileChooser.getExtensionFilters().clear();
         fileChooser.getExtensionFilters().add(sysexFileFilter);
 
-        if (!options.lastFullPathSysex.equals("")) {
+        if (!options.lastFullPathSysex.isEmpty()) {
             fileChooser.setInitialDirectory(new File(options.lastFullPathSysex).getParentFile());
         }
         file = fileChooser.showOpenDialog(parent);
@@ -262,11 +256,9 @@ public class FileManager {
                     fis.read(sysex);
                     fis.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    // e.printStackTrace();
                     Utils.show_error("Error loading Sysex from file:\n" +
                             file.getAbsolutePath() + "\n"
-                            +"(" + e.getMessage() + ")");
+                            + "(" + e.getMessage() + ")");
                 }
             }
         }
